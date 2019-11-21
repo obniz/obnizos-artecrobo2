@@ -1,0 +1,64 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="../../../artec.js"></script>
+</head>
+<body>
+
+<div id="obniz-debug"></div>
+<h1>obniz instant HTML</h1>
+<br/><br/>
+
+<button id="cw">cw</button>
+<button id="ccw">ccw</button>
+<button id="stop">stop</button>
+<button id="brake">brake</button>
+
+<script>
+
+
+  var atcRobo = new Artec.ArtecRobo("YOUR_STUDUIOBIT_ID");
+
+  atcRobo.onconnect = async function () {
+
+
+    let motor = new Artec.ArtecRobo.Motor(atcRobo, 'M1');
+    motor.stop();
+    motor.power(255);
+
+    $("#cw").click(async () => {
+      motor.cw();
+    });
+
+    $("#ccw").click(async () => {
+      motor.ccw();
+    });
+
+    $("#stop").click(async () => {
+      motor.stop();
+    });
+
+    $("#brake").click(async () => {
+      motor.brake();
+    });
+    //wifi接続／動作確認用
+    ledBlink();
+
+  };
+
+
+  async function ledBlink() {
+    while (1) {
+      atcRobo.studuinoBit.led.on();
+      await atcRobo.studuinoBit.wait(500);
+      atcRobo.studuinoBit.led.off();
+      await atcRobo.studuinoBit.wait(500);
+    }
+  }
+
+</script>
+</body>
+</html>

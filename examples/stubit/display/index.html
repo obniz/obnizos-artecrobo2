@@ -1,0 +1,66 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="../../../artec.js" ></script>
+</head>
+<body>
+
+<div id="obniz-debug"></div>
+<h1>obniz instant HTML</h1>
+<button id="red">red</button>
+<button id="green">green</button>
+<button id="blue">blue</button>
+
+<script>
+
+
+  var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
+  stubit.obniz.debugprint = true;
+  stubit.onconnect = async function () {
+    stubit.display.onWait();
+
+    function oneColor(color) {
+
+      //1pxずつデータ通信をしないために一度offにする
+      stubit.display.off();
+      for (let x = 0; x < 5; x++) {
+        for (let y = 0; y < 5; y++) {
+          stubit.display.setPixcel(x,y,color);
+        }
+      }
+      stubit.display.onWait();
+    }
+    stubit.display.setPixcel(0,0,[0x4f, 0, 0]);
+    $("#red").click(() => {
+      oneColor([0x4f, 0, 0]);
+    })
+    $("#green").click(() => {
+      oneColor([0, 0x4f, 0]);
+    })
+
+    $("#blue").click(() => {
+      oneColor([0, 0, 0x4f]);
+    })
+    //初期
+    oneColor([0x4f, 0, 0]);
+
+    //wifi接続／動作確認用
+    ledBlink();
+  }
+
+
+  async function ledBlink() {
+    while (1) {
+      stubit.led.on();
+      await stubit.wait(500);
+      stubit.led.off();
+      await stubit.wait(500);
+    }
+  }
+
+</script>
+</body>
+</html>

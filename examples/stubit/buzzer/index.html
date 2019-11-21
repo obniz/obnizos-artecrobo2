@@ -1,0 +1,64 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="../../../artec.js" ></script>
+</head>
+<body>
+
+<div id="obniz-debug"></div>
+<h1>obniz instant HTML</h1>
+<br/><br/>
+<button id="CDE">ドレミ</button> <br/>
+
+<input type="number" value="440" id="hz"/>Hzの音を出す
+<button id="hz_start">start</button><button id="hz_stop">stop</button>
+
+
+<script>
+
+
+  var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
+
+  stubit.onconnect = async function () {
+
+
+    $("#CDE").click(async () => {
+      await stubit.buzzer.onWait("C4", 500);
+      await stubit.buzzer.onWait("D4", 500);
+      await stubit.buzzer.onWait("E4", 500);
+      await stubit.buzzer.onWait("F4", 500);
+      await stubit.buzzer.onWait("G4", 500);
+      await stubit.buzzer.onWait("A4", 500);
+      await stubit.buzzer.onWait("B4", 500);
+      await stubit.buzzer.onWait("C5", 500);
+    })
+
+    $("#hz_start").click(async () => {
+      let hz = parseInt($("#hz").val());
+      stubit.buzzer.onWait(hz);
+    })
+    $("#hz_stop").click(async () => {
+      let hz = parseInt($("#hz").val());
+       stubit.buzzer.off();
+    })
+
+    //wifi接続／動作確認用
+    ledBlink();
+  }
+
+
+  async function ledBlink() {
+    while (1) {
+      stubit.led.on();
+      await stubit.wait(500);
+      stubit.led.off();
+      await stubit.wait(500);
+    }
+  }
+
+</script>
+</body>
+</html>
