@@ -92,3 +92,18 @@ Include obniz.js and artec.js
 ## Contribute
 
 Build and 
+
+First of all, clone This repo.
+
+install dependencies.
+
+```shell
+npm i
+```
+
+Sources are under src folder.
+Build them to generate artec.js and documents.
+
+```shell
+npm build
+```
