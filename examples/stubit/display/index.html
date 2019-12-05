@@ -20,7 +20,7 @@
   var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
   stubit.obniz.debugprint = true;
   stubit.onconnect = async function () {
-    stubit.display.onWait();
+    stubit.display.on();
 
     function oneColor(color) {
 
@@ -31,7 +31,7 @@
           stubit.display.setPixcel(x,y,color);
         }
       }
-      stubit.display.onWait();
+      stubit.display.on();
     }
     stubit.display.setPixcel(0,0,[0x4f, 0, 0]);
     $("#red").click(() => {

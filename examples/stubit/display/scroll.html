@@ -16,10 +16,10 @@
 
   var message = "Helloこんにちは안녕하세요你好";
 
-  var stubit = new Artec.StuduinoBit("13461350");
+  var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
   stubit.obniz.debugprint = true;
   stubit.onconnect = async function () {
-    stubit.display.onWait();
+    stubit.display.on();
 
     const ctx = stubit.obniz.util.createCanvasContext(5, 5);
 
@@ -52,7 +52,7 @@
         let col = parseInt(index - line * width );
         stubit.display.setPixcel(col,line,[data[i], data[i+1],data[i+2]]);
       }
-      stubit.display.onWait();
+      stubit.display.on();
     }
 
     $("#send").onWait("click", async ()=>{
