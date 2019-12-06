@@ -813,6 +813,18 @@ function ColorToHex(color) {
     return "#" + _componentToHex(color[0]) + _componentToHex(color[1]) + _componentToHex(color[2]);
 }
 exports.ColorToHex = ColorToHex;
+function hexToColor(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) {
+        throw new Error(`it is not hex color`);
+    }
+    return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
+}
+exports.hexToColor = hexToColor;
+exports.Cookies = { set: function (b, c, a = null) { b = [encodeURIComponent(b) + "=" + encodeURIComponent(c)]; a && ("expiry" in a && ("number" == typeof a.expiry && (a.expiry = new Date(1E3 * a.expiry + +new Date)), b.push("expires=" + a.expiry.toGMTString())), "domain" in a && b.push("domain=" + a.domain), "path" in a && b.push("path=" + a.path), "secure" in a && a.secure && b.push("secure")); document.cookie = b.join("; "); }, get: function (b, c = null) { for (var a = [], e = document.cookie.split(/; */), d = 0; d < e.length; d++) {
+        var f = e[d].split("=");
+        f[0] == encodeURIComponent(b) && a.push(decodeURIComponent(f[1].replace(/\+/g, "%20")));
+    } return c ? a : a[0]; }, clear: function (b, c) { c || (c = {}); c.expiry = -86400; this.set(b, "", c); } };
 
 
 /***/ }),
@@ -962,7 +974,17 @@ class StuduinoBitImage {
         }
         return this._pixels[y][x];
     }
-    setBaseColor(color) {
+    setBaseColor(param0, param1 = 0, param2 = 0) {
+        let color = [0, 0, 0];
+        if (typeof param0 === "string") {
+            color = common_1.hexToColor(param0);
+        }
+        else if (typeof param0 === "number") {
+            color = [param0, param1, param2];
+        }
+        else {
+            color = param0;
+        }
         this._color = color;
     }
     shiftLeft(shift) {
@@ -1471,14 +1493,14 @@ class StuduinoBitDisplay {
             }
         });
     }
-    scrollWait(text, delay = 150, wait = true, loop = false, clear = false, color = null) {
+    scrollWait(text, delay = 150, wait = true, loop = false, monospace = false, color = null) {
         return __awaiter(this, void 0, void 0, function* () {
             this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
             const ctx = this._ctx();
             var metrics = ctx.measureText(text);
             for (let i = 0; i < metrics.width; i++) {
                 while (true) {
-                    this.showText(text, -i);
+                    this.showText(text, -i, monospace);
                     if (wait) {
                         yield this._studioBit.wait(delay);
                     }
@@ -1492,9 +1514,6 @@ class StuduinoBitDisplay {
                         break;
                     }
                 }
-            }
-            if (clear) {
-                this.clear();
             }
         });
     }
@@ -1510,13 +1529,13 @@ class StuduinoBitDisplay {
         }
         this.on();
     }
-    showText(text, x = 0) {
+    showText(text, x = 0, monospace = false) {
         const ctx = this._ctx();
         const color = this._paintColor;
         const hex = common_1.ColorToHex(color);
         ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, this.width, this.height);
-        console.log(hex);
+        ctx.font = monospace ? `7px monospace` : `7px sans-serif`;
         ctx.fillStyle = hex;
         ctx.fillText(text, x, 5);
         this.draw(ctx);
@@ -1524,10 +1543,6 @@ class StuduinoBitDisplay {
     }
     showNumber(number) {
         this.showText('' + number);
-    }
-    scroll(str, delay = 150, wait = true, loop = false, monospace = false, color = null) {
-        // TODO
-        throw new Error("TODO");
     }
     clear() {
         this._pixcels = [];
@@ -2207,6 +2222,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 class StuduinoBitDigitalPinMixin {
     constructor(studuinoBit, pin) {
+        this.pwm = null;
         this.pin = pin;
         this.studuinoBit = studuinoBit;
     }
@@ -2218,17 +2234,31 @@ class StuduinoBitDigitalPinMixin {
         // @ts-ignore
         return this.studuinoBit.obniz.getIO(this.pin).inputWait();
     }
+    preparedPwm() {
+        if (!this.pwm) {
+            this.pwm = this.studuinoBit.obniz.getFreePwm();
+            this.pwm.start({ io: this.pin });
+        }
+        return this.pwm;
+    }
     writeAnalog(value) {
-        // todo
+        // 0 to 1023
+        const pwm = this.preparedPwm();
+        pwm.duty(value / 1023 * 100);
     }
-    setAnalogPeriod() {
-        // todo
+    setAnalogPeriod(period) {
+        // msec
+        const pwm = this.preparedPwm();
+        pwm.pulse(period);
     }
-    setAnalogPeriodMicroseconds() {
-        // todo
+    setAnalogPeriodMicroseconds(period) {
+        // usec
+        const pwm = this.preparedPwm();
+        pwm.pulse(period * 1000);
     }
-    setAnalogHz() {
-        // todo
+    setAnalogHz(hz) {
+        const pwm = this.preparedPwm();
+        pwm.freq(hz);
     }
 }
 class StuduinoBitAnalogPinMixin {
@@ -2262,6 +2292,7 @@ exports.StuduinoBitAnalogPin = StuduinoBitAnalogPin;
 // @ts-ignore
 class StuduinoBitAnalogDitialPin {
     constructor(studuinoBit, pin) {
+        this.pwm = null;
         this.pin = pin;
         this.studuinoBit = studuinoBit;
     }
@@ -2273,25 +2304,35 @@ class StuduinoBitAnalogDitialPin {
         // will replace by applyMixins
         throw new Error("abstcact function");
     }
-    writeAnalog() {
-        // will replace by applyMixins
-        throw new Error("abstcact function");
-    }
     writeDigital(value) {
         // will replace by applyMixins
         throw new Error("abstcact function");
     }
-    setAnalogPeriod() {
-        // will replace by applyMixins
-        throw new Error("abstcact function");
+    preparedPwm() {
+        if (!this.pwm) {
+            this.pwm = this.studuinoBit.obniz.getFreePwm();
+            this.pwm.start({ io: this.pin });
+        }
+        return this.pwm;
     }
-    setAnalogPeriodMicroseconds() {
-        // will replace by applyMixins
-        throw new Error("abstcact function");
+    writeAnalog(value) {
+        // 0 to 1023
+        const pwm = this.preparedPwm();
+        pwm.duty(value / 1023 * 100);
     }
-    setAnalogHz() {
-        // will replace by applyMixins
-        throw new Error("abstcact function");
+    setAnalogPeriod(period) {
+        // msec
+        const pwm = this.preparedPwm();
+        pwm.pulse(period);
+    }
+    setAnalogPeriodMicroseconds(period) {
+        // usec
+        const pwm = this.preparedPwm();
+        pwm.pulse(period * 1000);
+    }
+    setAnalogHz(hz) {
+        const pwm = this.preparedPwm();
+        pwm.freq(hz);
     }
 }
 exports.StuduinoBitAnalogDitialPin = StuduinoBitAnalogDitialPin;

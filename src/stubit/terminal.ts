@@ -1,11 +1,13 @@
 // tslint:disable:max-classes-per-file
 
-import {AD} from "obniz/obniz/libs/io_peripherals/ad";
+import { AD } from "obniz/obniz/libs/io_peripherals/ad";
+import { PWM } from "obniz/obniz/libs/io_peripherals/pwm";
 import {StuduinoBit} from "./index";
 
 class StuduinoBitDigitalPinMixin {
     public pin: number;
     private studuinoBit: StuduinoBit;
+    protected pwm: PWM | null = null
 
     constructor(studuinoBit: StuduinoBit, pin: number) {
         this.pin = pin;
@@ -22,20 +24,35 @@ class StuduinoBitDigitalPinMixin {
         return this.studuinoBit.obniz.getIO(this.pin).inputWait();
     }
 
+    private preparedPwm(): PWM {
+        if (!this.pwm) {
+            this.pwm = this.studuinoBit.obniz.getFreePwm();
+            this.pwm.start({io: this.pin})
+        }
+        return this.pwm;
+    }
+
     public writeAnalog(value: number) {
-        // todo
+        // 0 to 1023
+        const pwm = this.preparedPwm();
+        pwm.duty(value / 1023 * 100)
     }
 
-    public setAnalogPeriod() {
-        // todo
+    public setAnalogPeriod(period: number) {
+        // msec
+        const pwm = this.preparedPwm();
+        pwm.pulse(period)
     }
 
-    public setAnalogPeriodMicroseconds() {
-        // todo
+    public setAnalogPeriodMicroseconds(period: number) {
+        // usec
+        const pwm = this.preparedPwm();
+        pwm.pulse(period * 1000)
     }
 
-    public setAnalogHz() {
-        // todo
+    public setAnalogHz(hz: number) {
+        const pwm = this.preparedPwm();
+        pwm.freq(hz);
     }
 }
 
@@ -77,6 +94,7 @@ export class StuduinoBitAnalogPin extends StuduinoBitAnalogPinMixin {
 export class StuduinoBitAnalogDitialPin implements StuduinoBitDigitalPinMixin, StuduinoBitAnalogPinMixin {
     public pin: number;
     private studuinoBit: StuduinoBit;
+    protected pwm: PWM | null = null;
 
     constructor(studuinoBit: StuduinoBit, pin: number) {
         this.pin = pin;
@@ -93,31 +111,41 @@ export class StuduinoBitAnalogDitialPin implements StuduinoBitDigitalPinMixin, S
         throw new Error("abstcact function");
     }
 
-    public writeAnalog(): void {
-        // will replace by applyMixins
-        throw new Error("abstcact function");
-    }
-
     public writeDigital(value: boolean | number): void {
         // will replace by applyMixins
         throw new Error("abstcact function");
     }
 
-    public setAnalogPeriod() {
-        // will replace by applyMixins
-        throw new Error("abstcact function");
+    private preparedPwm(): PWM {
+        if (!this.pwm) {
+            this.pwm = this.studuinoBit.obniz.getFreePwm();
+            this.pwm.start({ io: this.pin })
+        }
+        return this.pwm;
     }
 
-    public setAnalogPeriodMicroseconds() {
-        // will replace by applyMixins
-        throw new Error("abstcact function");
+    public writeAnalog(value: number) {
+        // 0 to 1023
+        const pwm = this.preparedPwm();
+        pwm.duty(value / 1023 * 100)
     }
 
-    public setAnalogHz() {
-        // will replace by applyMixins
-        throw new Error("abstcact function");
+    public setAnalogPeriod(period: number) {
+        // msec
+        const pwm = this.preparedPwm();
+        pwm.pulse(period)
     }
 
+    public setAnalogPeriodMicroseconds(period: number) {
+        // usec
+        const pwm = this.preparedPwm();
+        pwm.pulse(period * 1000)
+    }
+
+    public setAnalogHz(hz: number) {
+        const pwm = this.preparedPwm();
+        pwm.freq(hz);
+    }
 }
 
 applyMixins(StuduinoBitAnalogDitialPin, [StuduinoBitDigitalPinMixin, StuduinoBitAnalogPinMixin]);

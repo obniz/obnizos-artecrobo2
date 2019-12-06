@@ -1,4 +1,4 @@
-import { Color, ColorToHex } from "../common";
+import { Color, ColorToHex, hexToColor } from "../common";
 
 export class StuduinoBitImage {
 
@@ -125,7 +125,15 @@ export class StuduinoBitImage {
     return this._pixels[y][x];
   }
 
-  public setBaseColor(color: Color) {
+  public setBaseColor(param0: Color | string | number, param1: number = 0, param2: number = 0) {
+    let color: Color = [0,0,0];
+    if (typeof param0 === "string") {
+      color = hexToColor(param0);
+    } else if (typeof param0 === "number") {
+      color = [param0 as number, param1, param2]
+    } else {
+      color = param0 as Color;
+    }
     this._color = color;
   }
 

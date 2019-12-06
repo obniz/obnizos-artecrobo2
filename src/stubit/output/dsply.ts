@@ -161,7 +161,7 @@ export class StuduinoBitDisplay {
         delay: number = 150,
         wait: boolean = true,
         loop: boolean = false,
-        clear: boolean = false,
+        monospace: boolean = false,
         color: Color | null = null) {
 
         this._paintColor = color || Image.defaultColor;
@@ -171,7 +171,7 @@ export class StuduinoBitDisplay {
 
         for (let i = 0; i < metrics.width; i++) {
             while (true) {
-                this.showText(text, -i);
+                this.showText(text, -i, monospace);
                 if (wait) {
                     await this._studioBit.wait(delay)
                 } else {
@@ -184,10 +184,6 @@ export class StuduinoBitDisplay {
                     break;
                 }
             }
-        }
-
-        if (clear) {
-            this.clear();
         }
     }
 
@@ -204,13 +200,13 @@ export class StuduinoBitDisplay {
         this.on();
     }
 
-    protected showText(text: string, x:number = 0) {
+    protected showText(text: string, x:number = 0, monospace = false) {
         const ctx = this._ctx();
         const color: Color = this._paintColor;
         const hex = ColorToHex(color);
         ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, this.width, this.height);
-        console.log(hex);
+        ctx.font = monospace ? `7px monospace` : `7px sans-serif`;
         ctx.fillStyle = hex;
         ctx.fillText(text, x, 5);
 
@@ -220,19 +216,6 @@ export class StuduinoBitDisplay {
 
     protected showNumber(number: number) {
         this.showText(''+number);
-    }
-
-
-    public scroll( str: string,
-                   delay: number= 150,
-                   wait: boolean= true,
-                   loop: boolean= false,
-                   monospace: boolean= false,
-                   color: Color | null = null) {
-
-        // TODO
-        throw new Error("TODO");
-
     }
 
     public clear() {
