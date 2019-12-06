@@ -781,6 +781,42 @@ exports.ICMRegisterRW = ICMRegisterRW;
 
 /***/ }),
 
+/***/ "./src/stubit/common.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function _rgb_24bit(color) {
+    const r = Math.max(Math.min(color[0], 255), 0);
+    const g = Math.max(Math.min(color[1], 255), 0);
+    const b = Math.max(Math.min(color[2], 255), 0);
+    return (r << 16) + (g << 8) + (b);
+}
+exports._rgb_24bit = _rgb_24bit;
+function _24bit_rgb(val24) {
+    const r = (val24 >> 16) & 0x000000ff;
+    const g = (val24 >> 8) & 0x000000ff;
+    const b = val24 & 0x000000ff;
+    return [r, g, b];
+}
+exports._24bit_rgb = _24bit_rgb;
+function _componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+function _rgbToHex(r, g, b) {
+    return "#" + _componentToHex(r) + _componentToHex(g) + _componentToHex(b);
+}
+exports._rgbToHex = _rgbToHex;
+function ColorToHex(color) {
+    return "#" + _componentToHex(color[0]) + _componentToHex(color[1]) + _componentToHex(color[2]);
+}
+exports.ColorToHex = ColorToHex;
+
+
+/***/ }),
+
 /***/ "./src/stubit/const.ts":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -810,6 +846,241 @@ exports.BuiltinColor = {
 
 /***/ }),
 
+/***/ "./src/stubit/image/image.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const common_1 = __webpack_require__("./src/stubit/common.ts");
+class StuduinoBitImage {
+    constructor(param0, param1, buffer, color = [31, 0, 0]) {
+        if (typeof param0 === 'string') {
+            if (typeof param1 === 'number') {
+                throw new Error(`Invalid format of color`);
+            }
+            if (!param1) {
+                param1 = StuduinoBitImage.defaultColor;
+            }
+            this._color = param1;
+            this._pixels = this.pixelsFrom(param0, param1);
+        }
+        else {
+            if (0 < param0 && param0 <= 5 && typeof param1 == 'number' && 0 < param1 && param0 <= 5) {
+                this._color = color;
+                this._pixels = this.pixelsFromBuffer(param0, param1, buffer, color);
+            }
+            else {
+                throw new Error(`Invalid Format`);
+            }
+        }
+    }
+    pixelsFrom(str, color) {
+        const arrays = [];
+        const rowBuf = str.split(':');
+        for (const rowString of rowBuf) {
+            if (rowString.length == 0)
+                continue;
+            const row = [];
+            for (let index = 0; index < rowString.length; index++) {
+                if (rowString.charAt(index) === '0') {
+                    row.push([0, 0, 0]);
+                }
+                else {
+                    row.push(color);
+                }
+            }
+            arrays.push(row);
+        }
+        return arrays;
+    }
+    pixelsFromBuffer(w, h, buffer, color) {
+        const arrays = [];
+        if (buffer) {
+            if (buffer.length != w * h) {
+                throw new Error(`buffer size does not match to w*h`);
+            }
+            for (let y = 0; y < h; y++) {
+                let row = [];
+                for (let x = 0; x < w; x++) {
+                    row.push(buffer[y * w + x] ? color : [0, 0, 0]);
+                }
+                arrays.push(row);
+            }
+        }
+        else {
+            for (let y = 0; y < h; y++) {
+                let row = [];
+                for (let x = 0; x < w; x++) {
+                    row.push(color); /* [0, 0, 0]？ */
+                }
+                arrays.push(row);
+            }
+        }
+        return arrays;
+    }
+    toPixels() {
+        const pixels = [];
+        for (const row of this._pixels) {
+            for (const one of row) {
+                pixels.push(one);
+            }
+        }
+        return pixels;
+    }
+    width() {
+        return this._pixels[0].length;
+    }
+    height() {
+        return this._pixels.length;
+    }
+    setPixel(x, y, value) {
+        if (x < 0 || x >= this.width() || y < 0 || y >= this.height()) {
+            throw new Error(`It exceed image size`);
+        }
+        this.setPixelColor(x, y, (value) ? this._color : [0, 0, 0]);
+    }
+    setPixelColor(x, y, color) {
+        if (x < 0 || x >= this.width() || y < 0 || y >= this.height()) {
+            throw new Error(`It exceed image size`);
+        }
+        this._pixels[y][x] = color;
+    }
+    getPixel(x, y) {
+        if (x < 0 || x >= this.width() || y < 0 || y >= this.height()) {
+            throw new Error(`It exceed image size`);
+        }
+        return this._pixels[y][x][0] + this._pixels[y][x][1] + this._pixels[y][x][2] !== 0 ? 1 : 0;
+    }
+    getPixelColor(x, y, hex = false) {
+        if (x < 0 || x >= this.width() || y < 0 || y >= this.height()) {
+            throw new Error(`It exceed image size`);
+        }
+        const pixel = this._pixels[y][x];
+        if (hex) {
+            return common_1.ColorToHex(pixel);
+        }
+        return this._pixels[y][x];
+    }
+    setBaseColor(color) {
+        this._color = color;
+    }
+    shiftLeft(shift) {
+        for (let i = 0; i < shift; i++) {
+            for (const row of this._pixels) {
+                for (let index = 0; index < row.length - 1; index++) {
+                    row[index] = row[index + 1];
+                }
+                row[row.length - 1] = [0, 0, 0];
+            }
+        }
+    }
+    shiftRight(shift) {
+        for (let i = 0; i < shift; i++) {
+            for (const row of this._pixels) {
+                for (let index = row.length - 1; index > 0; index--) {
+                    row[index] = row[index - 1];
+                }
+                row[0] = [0, 0, 0];
+            }
+        }
+    }
+    shiftUp(shift) {
+        for (let count = 0; count < shift; count++) {
+            let row = [];
+            for (let i = 0; i < this.width(); i++) {
+                row.push([0, 0, 0]);
+            }
+            this._pixels.splice(0, 1);
+            this._pixels.push(row);
+        }
+    }
+    shiftDown(shift) {
+        for (let count = 0; count < shift; count++) {
+            let row = [];
+            for (let i = 0; i < this.width(); i++) {
+                row.push([0, 0, 0]);
+            }
+            this._pixels.unshift(row);
+            this._pixels.splice(this._pixels.length - 1, 1);
+        }
+    }
+    crop(src_x, src_y, w, h) {
+        if (src_x < 0 || src_x + w > this.width() || src_y < 0 || src_y + h > this.height() || w == 0 || h == 0) {
+            throw new Error(`Invalid crop`);
+        }
+        const buf = [];
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                buf.push(this.getPixel(src_x + x, src_y + y));
+            }
+        }
+        return new StuduinoBitImage(w, h, buf, this._color);
+    }
+    copy() {
+        return this.crop(0, 0, this.width(), this.height());
+    }
+    invert() {
+        for (let y = 0; y < this.height(); y++) {
+            for (let x = 0; x < this.width(); x++) {
+                this.setPixel(x, y, this.getPixel(x, y) ? 0 : 1);
+            }
+        }
+    }
+    fill(value) {
+        if (value < 0 || 9 < value) {
+            throw new Error(`value must be within 0 to 9`);
+        }
+        for (let y = 0; y < this.height(); y++) {
+            for (let x = 0; x < this.width(); x++) {
+                // 変換方法が不明
+            }
+        }
+        throw new Error('WIP');
+    }
+    paste(src, x, y) {
+        for (let indexy = 0; indexy < src.height() && (indexy + y) < this.height(); indexy++) {
+            for (let indexx = 0; indexx < src.width() && (indexx + x) < this.width(); indexx++) {
+                this.setPixelColor((indexx + x), (indexy + y), src.getPixelColor(indexx, indexy));
+            }
+        }
+    }
+    blit(src, src_x, src_y, w, h, xdest = 0, ydest = 0) {
+        const cropped = src.crop(src_x, src_y, w, h);
+        this.paste(cropped, xdest, ydest);
+    }
+    repr() {
+        let result = "";
+        for (let y = 0; y < this.height(); y++) {
+            for (let x = 0; x < this.width(); x++) {
+                result += (this.getPixel(x, y)) ? '1' : '0';
+            }
+            result += ':';
+        }
+        return result;
+    }
+    str() {
+        let result = "";
+        for (let y = 0; y < this.height(); y++) {
+            for (let x = 0; x < this.width(); x++) {
+                result += (this.getPixel(x, y)) ? '1' : '0';
+            }
+            if (y + 1 == this.height()) {
+                result += ':';
+            }
+            else {
+                result += ':\n';
+            }
+        }
+        return result;
+    }
+}
+StuduinoBitImage.defaultColor = [31, 0, 0];
+exports.StuduinoBitImage = StuduinoBitImage;
+
+
+/***/ }),
+
 /***/ "./src/stubit/index.ts":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -830,6 +1101,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const obniz_1 = __importDefault(__webpack_require__("./src/webpack-replace/obniz.js"));
 // parts
 const i2c_1 = __webpack_require__("./src/stubit/bus/i2c.ts");
+const image_1 = __webpack_require__("./src/stubit/image/image.ts");
 const bzr_1 = __webpack_require__("./src/stubit/output/bzr.ts");
 const dsply_1 = __webpack_require__("./src/stubit/output/dsply.ts");
 const led_1 = __webpack_require__("./src/stubit/output/led.ts");
@@ -935,6 +1207,8 @@ class StuduinoBit {
         this.p20 = undefined;
     }
 }
+/* Classes */
+StuduinoBit.Image = image_1.StuduinoBitImage;
 exports.StuduinoBit = StuduinoBit;
 
 
@@ -1055,11 +1329,25 @@ exports.StuduinoBitBuzzer = StuduinoBitBuzzer;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const common_1 = __webpack_require__("./src/stubit/common.ts");
 const const_1 = __webpack_require__("./src/stubit/const.ts");
+const image_1 = __webpack_require__("./src/stubit/image/image.ts");
 class StuduinoBitDisplay {
     constructor(studioBit, options) {
+        this._paintColor = image_1.StuduinoBitImage.defaultColor;
         this._enable = false;
+        this._canvas = null;
+        this.width = 5;
+        this.height = 5;
         this._studioBit = studioBit;
         this._enablePin = studioBit.obniz.io2;
         this.off();
@@ -1069,11 +1357,46 @@ class StuduinoBitDisplay {
             this._pixcels.push(const_1.BuiltinColor.CLEAR);
         }
         // this.onWait();
+        this._preparedCanvas();
+    }
+    _preparedCanvas() {
+        if (this._canvas) {
+            return this._canvas;
+        }
+        const isNode = typeof window === 'undefined';
+        if (isNode) {
+        }
+        else {
+            const identifier = 'obnizcanvas-';
+            let canvas = document.getElementById(identifier);
+            if (!canvas) {
+                canvas = document.createElement('canvas');
+                canvas.setAttribute('id', identifier);
+                canvas.style.visibility = 'hidden';
+                canvas.width = this.width;
+                canvas.height = this.height;
+                canvas.style['-webkit-font-smoothing'] = 'none';
+                let body = document.getElementsByTagName('body')[0];
+                body.appendChild(canvas);
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, this.width, this.height);
+            ctx.fillStyle = '#FFF';
+            ctx.strokeStyle = '#FFF';
+            ctx.font = `7px sans-serif`;
+            this._canvas = canvas;
+        }
+        return;
+    }
+    _ctx() {
+        this._preparedCanvas();
+        return this._canvas.getContext('2d');
     }
     getPixel(x, y) {
         return this._pixcels[this._getIndex(x, y)];
     }
-    setPixcel(x, y, color) {
+    setPixel(x, y, color) {
         let c;
         if (typeof color === "string") {
             c = [0, 0, 0];
@@ -1097,9 +1420,110 @@ class StuduinoBitDisplay {
         this._enable = false;
         this._enablePin.output(false);
     }
-    show(iterable, delay = 400, wait = true, loop = false, clear = false, color = null) {
-        // TODO
-        throw new Error("TODO");
+    draw(ctx) {
+        let width = this.width;
+        let height = this.height;
+        //1pxずつデータ通信をしないために一度offにする
+        this.off();
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const index = Math.floor(i / 4);
+            const line = Math.floor(index / width);
+            const col = Math.floor(index - line * width);
+            this.setPixel(col, line, [data[i], data[i + 1], data[i + 2]]);
+        }
+        this.on();
+    }
+    showWait(iterable, delay = 400, wait = true, loop = false, clear = false, color = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
+            while (true) {
+                for (const item of iterable) {
+                    if (item instanceof image_1.StuduinoBitImage) {
+                        this.showImage(item);
+                    }
+                    else if (typeof item === 'string') {
+                        this.showText(item);
+                    }
+                    else if (typeof item === 'number') {
+                        this.showNumber(item);
+                    }
+                    else {
+                        throw new Error(`It can't be shown`);
+                    }
+                    if (wait) {
+                        yield this._studioBit.wait(delay);
+                    }
+                    else {
+                        if (loop) {
+                            throw new Error(`You can't loop with no wait`);
+                        }
+                        this._studioBit.wait(delay);
+                    }
+                }
+                if (!loop) {
+                    break;
+                }
+            }
+            if (clear) {
+                this.clear();
+            }
+        });
+    }
+    scrollWait(text, delay = 150, wait = true, loop = false, clear = false, color = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
+            const ctx = this._ctx();
+            var metrics = ctx.measureText(text);
+            for (let i = 0; i < metrics.width; i++) {
+                while (true) {
+                    this.showText(text, -i);
+                    if (wait) {
+                        yield this._studioBit.wait(delay);
+                    }
+                    else {
+                        if (loop) {
+                            throw new Error(`You can't loop with no wait`);
+                        }
+                        this._studioBit.wait(delay);
+                    }
+                    if (!loop) {
+                        break;
+                    }
+                }
+            }
+            if (clear) {
+                this.clear();
+            }
+        });
+    }
+    showImage(image) {
+        this.off();
+        //const color: Color = this._paintColor || Image.defaultColor;
+        for (let y = 0; y < image.height(); y++) {
+            for (let x = 0; x < image.width(); x++) {
+                // const value = image.getPixel(x, y);
+                // this.setPixel(x, y, value ? color : [0, 0, 0]);
+                this.setPixel(x, y, image.getPixelColor(x, y));
+            }
+        }
+        this.on();
+    }
+    showText(text, x = 0) {
+        const ctx = this._ctx();
+        const color = this._paintColor;
+        const hex = common_1.ColorToHex(color);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, this.width, this.height);
+        console.log(hex);
+        ctx.fillStyle = hex;
+        ctx.fillText(text, x, 5);
+        this.draw(ctx);
+        this._update();
+    }
+    showNumber(number) {
+        this.showText('' + number);
     }
     scroll(str, delay = 150, wait = true, loop = false, monospace = false, color = null) {
         // TODO
@@ -1343,6 +1767,7 @@ class StuduinoBitButton {
                 this._alreadyPressed = true;
                 this._count++;
             }
+            else { }
         };
     }
     isPressedWait() {

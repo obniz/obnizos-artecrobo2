@@ -65,6 +65,96 @@
 				<a href="#artecjs" id="artecjs" style="color: inherit; text-decoration: none;">
 					<h1>Artec.js</h1>
 				</a>
+				<p>Usage</p>
+				<p>Include obniz.js and artec.js</p>
+				<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/obniz@2.2.0/obniz.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cdn.jsdelivr.net/gh/artec-kk/obniz-artecrobo2@master/artec.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre><pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://obniz.io/js/jquery-3.2.1.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/obniz@2.2.0/obniz.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cdn.jsdelivr.net/gh/artec-kk/obniz-artecrobo2@master/artec.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"obniz-debug"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"message"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"Helloこんにちは안녕하세요你好"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"send"</span>&gt;</span>send<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+
+    <span class="hljs-keyword">var</span> message = <span class="hljs-string">"Helloこんにちは안녕하세요你好"</span>;
+
+    <span class="hljs-keyword">var</span> stubit = <span class="hljs-keyword">new</span> Artec.StuduinoBit(<span class="hljs-string">'8269-6747'</span>);
+    stubit.onconnect = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      stubit.display.on();
+
+      <span class="hljs-keyword">const</span> ctx = stubit.obniz.util.createCanvasContext(<span class="hljs-number">5</span>, <span class="hljs-number">5</span>);
+
+      <span class="hljs-keyword">let</span> x = <span class="hljs-number">5</span>;
+      stubit.obniz.repeat(<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        ctx.fillStyle = <span class="hljs-string">"black"</span>;
+        ctx.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>);
+        ctx.fillStyle = <span class="hljs-string">"gray"</span>;
+        ctx.font = <span class="hljs-string">"9px sans-serif"</span>;
+        ctx.fillText(message, x, <span class="hljs-number">5</span>);
+        x--;
+
+        draw(ctx);
+      }, <span class="hljs-number">500</span>)
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">draw</span>(<span class="hljs-params">ctx</span>) </span>{
+
+        <span class="hljs-keyword">let</span> width = <span class="hljs-number">5</span>;
+        <span class="hljs-keyword">let</span> height = <span class="hljs-number">5</span>;
+        <span class="hljs-comment">//1pxずつデータ通信をしないために一度offにする</span>
+        stubit.display.off();
+
+        <span class="hljs-keyword">const</span> imageData = ctx.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
+        <span class="hljs-keyword">const</span> data = imageData.data;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; data.length; i += <span class="hljs-number">4</span>) {
+          <span class="hljs-keyword">let</span> index = <span class="hljs-built_in">parseInt</span>(i / <span class="hljs-number">4</span>);
+          <span class="hljs-keyword">let</span> line = <span class="hljs-built_in">parseInt</span>(index / width);
+          <span class="hljs-keyword">let</span> col = <span class="hljs-built_in">parseInt</span>(index - line * width);
+          stubit.display.setPixel(col, line, [data[i], data[i + <span class="hljs-number">1</span>], data[i + <span class="hljs-number">2</span>]]);
+        }
+        stubit.display.on();
+      }
+
+      $(<span class="hljs-string">"#send"</span>).click(<span class="hljs-keyword">async</span> () =&gt; {
+        message = $(<span class="hljs-string">"#message"</span>).val();
+        x = <span class="hljs-number">5</span>;
+      })
+    }
+
+
+    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ledBlink</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+        stubit.led.on();
+        <span class="hljs-keyword">await</span> stubit.wait(<span class="hljs-number">500</span>);
+        stubit.led.off();
+        <span class="hljs-keyword">await</span> stubit.wait(<span class="hljs-number">500</span>);
+      }
+    }
+
+  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+				<a href="#contribute" id="contribute" style="color: inherit; text-decoration: none;">
+					<h2>Contribute</h2>
+				</a>
+				<p>Build and </p>
+				<p>First of all, clone This repo.</p>
+				<p>install dependencies.</p>
+				<pre><code class="language-shell">npm i</code></pre>
+				<p>Sources are under src folder.
+				Build them to generate artec.js and documents.</p>
+				<pre><code class="language-shell">npm build</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -168,6 +258,9 @@
 						<a href="classes/studuinobiticm20948.html" class="tsd-kind-icon">Studuino<wbr>BitICM20948</a>
 					</li>
 					<li class=" tsd-kind-class">
+						<a href="classes/studuinobitimage.html" class="tsd-kind-icon">Studuino<wbr>Bit<wbr>Image</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/studuinobitled.html" class="tsd-kind-icon">Studuino<wbr>Bit<wbr>Led</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -231,7 +324,16 @@
 						<a href="globals.html#studuinobitpin" class="tsd-kind-icon">Studuino<wbr>Bit<wbr>Pin</a>
 					</li>
 					<li class=" tsd-kind-function">
+						<a href="globals.html#colortohex" class="tsd-kind-icon">Color<wbr>ToHex</a>
+					</li>
+					<li class=" tsd-kind-function">
 						<a href="globals.html#_24bit_rgb" class="tsd-kind-icon">_24bit_<wbr>rgb</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-not-exported">
+						<a href="globals.html#_componenttohex" class="tsd-kind-icon">_component<wbr>ToHex</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#_rgbtohex" class="tsd-kind-icon">_rgb<wbr>ToHex</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#_rgb_24bit" class="tsd-kind-icon">_rgb_<wbr>24bit</a>

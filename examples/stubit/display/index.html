@@ -28,12 +28,12 @@
       stubit.display.off();
       for (let x = 0; x < 5; x++) {
         for (let y = 0; y < 5; y++) {
-          stubit.display.setPixcel(x,y,color);
+          stubit.display.setPixel(x,y,color);
         }
       }
       stubit.display.on();
     }
-    stubit.display.setPixcel(0,0,[0x4f, 0, 0]);
+    stubit.display.setPixel(0,0,[0x4f, 0, 0]);
     $("#red").click(() => {
       oneColor([0x4f, 0, 0]);
     })

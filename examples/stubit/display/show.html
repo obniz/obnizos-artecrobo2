@@ -11,14 +11,21 @@
 <body>
 
   <div id="obniz-debug"></div>
+  <h1>obniz instant HTML</h1>
+  <button id="red">red</button>
+  <button id="green">green</button>
+  <button id="blue">blue</button>
 
   <script>
 
     var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
     stubit.onconnect = async function () {
       stubit.display.on();
-      await stubit.display.scrollWait('こんにちは　A B C D ');
-      console.log('finished');
+      await stubit.display.showWait([0, 1, 2], 1000);
+
+      await stubit.display.showWait(['A', 'B', 'C'], 1000, true, false, true, [0, 0, 100]);
+
+      await stubit.display.showWait(['A', 'B', 'C'], 1000, true, false, true, [0, 0, 100]);
     }
 
   </script>

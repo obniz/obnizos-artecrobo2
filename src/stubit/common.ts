@@ -14,3 +14,16 @@ export function  _24bit_rgb( val24: number): Color {
     const b =  val24        & 0x000000ff;
     return [r, g, b];
 }
+
+function _componentToHex(c: number) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+export function _rgbToHex(r: number, g: number, b: number) {
+    return "#" + _componentToHex(r) + _componentToHex(g) + _componentToHex(b);
+}
+
+export function ColorToHex(color: Color) {
+    return "#" + _componentToHex(color[0]) + _componentToHex(color[1]) + _componentToHex(color[2]);
+}

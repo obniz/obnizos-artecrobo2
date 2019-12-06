@@ -14,7 +14,7 @@ export class StuduinoBitButton {
             if (pressed) {
                 this._alreadyPressed = true;
                 this._count++;
-            }
+            } else {}
         };
     }
 

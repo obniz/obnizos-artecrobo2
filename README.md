@@ -62,7 +62,7 @@ Include obniz.js and artec.js
           let index = parseInt(i / 4);
           let line = parseInt(index / width);
           let col = parseInt(index - line * width);
-          stubit.display.setPixcel(col, line, [data[i], data[i + 1], data[i + 2]]);
+          stubit.display.setPixel(col, line, [data[i], data[i + 1], data[i + 2]]);
         }
         stubit.display.on();
       }

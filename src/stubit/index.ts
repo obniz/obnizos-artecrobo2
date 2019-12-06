@@ -3,6 +3,7 @@ import Obniz from "obniz";
 // parts
 import {StuduinoBitI2C} from "./bus/i2c";
 import {StuduinoBitSPI} from "./bus/spi";
+import { StuduinoBitImage } from "./image/image";
 import {StuduinoBitBuzzer} from "./output/bzr";
 import {StuduinoBitDisplay} from "./output/dsply";
 import {StuduinoBitLed} from "./output/led";
@@ -26,6 +27,10 @@ interface Pin {
 }
 
 export class StuduinoBit {
+
+    /* Classes */
+
+    public static Image = StuduinoBitImage;
 
     /* parts */
     public led?: StuduinoBitLed;
