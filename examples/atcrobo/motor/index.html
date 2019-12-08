@@ -31,18 +31,26 @@
 
     $("#cw").click(async () => {
       motor.cw();
+      // or motor.action("cw");
+      // or motor.action(motor.CW);
     });
 
     $("#ccw").click(async () => {
       motor.ccw();
+      // or motor.action("ccw");
+      // or motor.action(motor.CCW);
     });
 
     $("#stop").click(async () => {
       motor.stop();
+      // or motor.action("stop");
+      // or motor.action(motor.STOP);
     });
 
     $("#brake").click(async () => {
-      motor.brake();
+      motor.break();
+      // or motor.action("break");
+      // or motor.action(motor.BREAK);
     });
     //wifi接続／動作確認用
     ledBlink();

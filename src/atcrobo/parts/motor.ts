@@ -5,7 +5,7 @@ import {I2CPin} from "../pin/i2cPin";
 import {MotorPin} from "../pin/motorPin";
 import {ArtecRoboMotorParts, MotorPinString} from "./motorParts";
 
-type  ArtecRoboMotorMotion = "cw" | "ccw" | "brake" | "stop";
+type  ArtecRoboMotorMotion = "cw" | "ccw" | "break" | "stop";
 
 export class ArtecRoboMotor extends ArtecRoboMotorParts {
     private _currentMotion: ArtecRoboMotorMotion = "stop";
@@ -15,8 +15,12 @@ export class ArtecRoboMotor extends ArtecRoboMotorParts {
         [0x00, 0x01, 0x02, 0x03, 0x04], // m1のときのコマンド
         [0x08, 0x09, 0x0A, 0x0B, 0x0C], // m2のときのコマンド
     ];
-
     private _p: number;
+
+    public CW = "cw";
+    public CCW = "ccw";
+    public BREAK = "break";
+    public STOP = "stop";
 
     constructor(artecRobo: ArtecRobo, motorPin: MotorPin | MotorPinString) {
         super(artecRobo, motorPin);
@@ -41,8 +45,8 @@ export class ArtecRoboMotor extends ArtecRoboMotorParts {
         this._action("stop");
     }
 
-    public brake() {
-        this._action("brake");
+    public break() {
+        this._action("break");
     }
 
     public power(power: number) {
@@ -62,7 +66,7 @@ export class ArtecRoboMotor extends ArtecRoboMotorParts {
             index = 1;
         } else if (motion === "stop") {
             index = 2;
-        } else if (motion === "brake") {
+        } else if (motion === "break") {
             index = 3;
         } else {
             throw new Error("motion: DCMotor.CW/CCW/STOP/BREAK");
@@ -87,5 +91,9 @@ export class ArtecRoboMotor extends ArtecRoboMotorParts {
             this._motorPin.i2c.write(this._ADDRESS, command);
         }
         this._currentMotion = motion;
+    }
+
+    public action(action: ArtecRoboMotorMotion) {
+        this._action(action);
     }
 }
