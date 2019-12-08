@@ -3,9 +3,9 @@ import {StuduinoBitPin} from "../../stubit/terminal";
 
 export class I2CPin {
     public terminalPin?: StuduinoBitPin;
-    private _i2c: StuduinoBitI2C;
+    public i2c: StuduinoBitI2C;
 
     constructor(i2c: StuduinoBitI2C) {
-        this._i2c = i2c;
+        this.i2c = i2c;
     }
 }

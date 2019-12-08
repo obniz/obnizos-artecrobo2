@@ -103,6 +103,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = __webpack_require__("./src/stubit/index.ts");
 const bzr_1 = __webpack_require__("./src/atcrobo/parts/bzr.ts");
+const acc_1 = __webpack_require__("./src/atcrobo/parts/acc.ts");
 const irPhtoRefrector_1 = __webpack_require__("./src/atcrobo/parts/irPhtoRefrector.ts");
 const led_1 = __webpack_require__("./src/atcrobo/parts/led.ts");
 const motor_1 = __webpack_require__("./src/atcrobo/parts/motor.ts");
@@ -194,11 +195,179 @@ ArtecRobo.Led = led_1.ArtecRoboLed;
 ArtecRobo.TouchSensor = touch_1.ArtecRoboTouchSensor;
 ArtecRobo.Motor = motor_1.ArtecRoboMotor;
 ArtecRobo.Buzzer = bzr_1.ArtecRoboBuzzer;
+ArtecRobo.Accelerometer = acc_1.ArtecRoboAccelerometer;
 ArtecRobo.ServoMotor = servomotor_1.ArtecRoboServoMotor;
 ArtecRobo.IrPhotoRefrector = irPhtoRefrector_1.ArtecRoboIrPhotoRefrector;
 ArtecRobo.Temperature = temperature_1.ArtecRoboTemperature;
 ArtecRobo.SoundSensor = sound_1.ArtecRoboSoundSensor;
 exports.ArtecRobo = ArtecRobo;
+
+
+/***/ }),
+
+/***/ "./src/atcrobo/parts/acc.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const i2cParts_1 = __webpack_require__("./src/atcrobo/parts/i2cParts.ts");
+class ArtecRoboAccelerometer extends i2cParts_1.ArtecRoboI2CParts {
+    constructor(artecRobo) {
+        super(artecRobo);
+        this.addr = 0x1d;
+        this.CTRL_REG1 = 0x2A;
+        this.CTRL_REG1_VALUE_ACTIVE = 0x01;
+        this.CTRL_REG1_VALUE_F_READ = 0x02;
+        this.CTRL_REG2 = 0x2B;
+        this.CTRL_REG2_RESET = 0x40;
+        this.PL_STATUS = 0x10;
+        this.PL_CFG = 0x11;
+        this.PL_EN = 0x40;
+        this.XYZ_DATA_CFG = 0x0E;
+        this.MODE_2G = 0x00; //# Set Sensitivity to 2g
+        this.MODE_4G = 0x01; //# Set Sensitivity to 4g
+        this.MODE_8G = 0x02; // # Set Sensitivity to 8g
+        this.FF_MT_CFG = 0x15;
+        this.FF_MT_CFG_ELE = 0x80;
+        this.FF_MT_CFG_OAE = 0x40;
+        this.FF_MT_SRC = 0x16;
+        this.FF_MT_SRC_EA = 0x80;
+        this.PULSE_CFG = 0x21;
+        this.PULSE_CFG_ELE = 0x80;
+        this.PULSE_SRC = 0x22;
+        this.PULSE_SRC_EA = 0x80;
+        // Sample rate
+        this.ODR_800 = 0x00;
+        this.ODR_400 = 0x08;
+        this.ODR_200 = 0x10;
+        this.ODR_100 = 0x18;
+        this.ODR_50 = 0x20;
+        this.ODR_12_5 = 0x28;
+        this.ODR_6_25 = 0x30;
+        this.ODR_1_56 = 0x38;
+        this.highres = false;
+        this.stepFactor = 0.0156;
+        this.values = [0, 0, 0];
+        this.artecRobo = artecRobo;
+    }
+    standby() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let arr = yield this._i2cPin.i2c.readFromMem(this.addr, this.CTRL_REG1, 1);
+            this._i2cPin.i2c.writeToMem(this.addr, this.CTRL_REG1, [arr[0] & ~this.CTRL_REG1_VALUE_ACTIVE]);
+        });
+    }
+    activate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let arr = yield this._i2cPin.i2c.readFromMem(this.addr, this.CTRL_REG1, 1);
+            let fRead = this.CTRL_REG1_VALUE_F_READ;
+            if (this.highres) {
+                fRead = 0;
+            }
+            this._i2cPin.i2c.writeToMem(this.addr, this.CTRL_REG1, [arr[0] | this.CTRL_REG1_VALUE_ACTIVE | fRead | this.ODR_100]);
+        });
+    }
+    _begin(highres = false, scale = 2) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.highres = highres;
+            if (this.highres) {
+                this.stepFactor = 0.0039;
+            }
+            else {
+                this.stepFactor = 0.0156;
+            }
+            if (scale == 4) {
+                this.stepFactor *= 2;
+            }
+            else if (scale == 8) {
+                this.stepFactor *= 4;
+            }
+            const _ = this._i2cPin.i2c.write(this.addr, [0x0D]);
+            // self.wai = self._read_register(0x0D) // used in not used 
+            this._i2cPin.i2c.writeToMem(this.addr, this.CTRL_REG2, [this.CTRL_REG2_RESET]);
+            yield this.artecRobo.studuinoBit.wait(10);
+            yield this.standby();
+            // # Set Portrait/Landscape mode
+            this._i2cPin.i2c.writeToMem(this.addr, this.PL_CFG, [0x80 | this.PL_EN]);
+            let mode = [this.MODE_2G];
+            if (scale == 4) {
+                mode[0] = this.MODE_4G;
+            }
+            else if (scale == 8) {
+                mode[0] = this.MODE_8G;
+            }
+            this._i2cPin.i2c.writeToMem(this.addr, this.XYZ_DATA_CFG, mode);
+            yield this.activate();
+        });
+    }
+    configurationWait(highres = false, scale = 2) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this._begin(highres, scale);
+        });
+    }
+    getXWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.update();
+            return this.values[0];
+        });
+    }
+    getYWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.update();
+            return this.values[1];
+        });
+    }
+    getZWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.update();
+            return this.values[2];
+        });
+    }
+    getValuesWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.update();
+            return this.values;
+        });
+    }
+    update() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const arr = yield this._i2cPin.i2c.readFromMem(this.addr, 0x00, this.highres ? 7 : 4);
+            // 0 byte = status
+            if (this.highres) {
+                const x = this.si16(arr[1] << 8 + arr[2]);
+                const y = this.si16(arr[3] << 8 + arr[4]);
+                const z = this.si16(arr[5] << 8 + arr[6]);
+                this.values = [
+                    x / 64 * this.stepFactor,
+                    y / 64 * this.stepFactor,
+                    z / 64 * this.stepFactor,
+                ];
+            }
+            else {
+                const x = this.si16(arr[1] << 8);
+                const y = this.si16(arr[2] << 8);
+                const z = this.si16(arr[3] << 8);
+                this.values = [
+                    x / 256 * this.stepFactor,
+                    y / 256 * this.stepFactor,
+                    z / 256 * this.stepFactor,
+                ];
+            }
+        });
+    }
+    si16(value) {
+        return -(value & 0x8000) | (value & 0x7fff);
+    }
+}
+exports.ArtecRoboAccelerometer = ArtecRoboAccelerometer;
 
 
 /***/ }),
@@ -218,6 +387,22 @@ class ArtecRoboBuzzer extends bzr_1.StuduinoBitBuzzer {
     }
 }
 exports.ArtecRoboBuzzer = ArtecRoboBuzzer;
+
+
+/***/ }),
+
+/***/ "./src/atcrobo/parts/i2cParts.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class ArtecRoboI2CParts {
+    constructor(artecRobo) {
+        this._i2cPin = artecRobo.i2c;
+    }
+}
+exports.ArtecRoboI2CParts = ArtecRoboI2CParts;
 
 
 /***/ }),
@@ -568,7 +753,7 @@ exports.ArtecRoboTouchSensor = ArtecRoboTouchSensor;
 Object.defineProperty(exports, "__esModule", { value: true });
 class I2CPin {
     constructor(i2c) {
-        this._i2c = i2c;
+        this.i2c = i2c;
     }
 }
 exports.I2CPin = I2CPin;
@@ -663,14 +848,18 @@ class StuduinoBitI2C {
         studuinoBit.obniz.wait(5);
     }
     read(addr, n) {
-        return this.obnizI2c.readWait(addr, n);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.obnizI2c.readWait(addr, n);
+        });
     }
     write(addr, buf, repeat = false) {
         this.obnizI2c.write(addr, buf);
     }
     readFromMem(addr, memAddr, length) {
-        this.obnizI2c.write(addr, [memAddr]);
-        return this.obnizI2c.readWait(addr, length);
+        return __awaiter(this, void 0, void 0, function* () {
+            this.obnizI2c.write(addr, [memAddr]);
+            return yield this.obnizI2c.readWait(addr, length);
+        });
     }
     writeToMem(addr, memAddr, data) {
         this.obnizI2c.write(addr, [memAddr, ...data]);

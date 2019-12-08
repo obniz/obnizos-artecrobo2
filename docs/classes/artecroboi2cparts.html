@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ArtecRoboOutputParts | Artec.js</title>
+	<title>ArtecRoboI2CParts | Artec.js</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="artecrobooutputparts.html">ArtecRoboOutputParts</a>
+					<a href="artecroboi2cparts.html">ArtecRoboI2CParts</a>
 				</li>
 			</ul>
-			<h1>Class ArtecRoboOutputParts</h1>
+			<h1>Class ArtecRoboI2CParts</h1>
 		</div>
 	</div>
 </header>
@@ -68,10 +68,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ArtecRoboOutputParts</span>
+						<span class="target">ArtecRoboI2CParts</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="artecroboled.html" class="tsd-signature-type">ArtecRoboLed</a>
+								<a href="artecroboaccelerometer.html" class="tsd-signature-type">ArtecRoboAccelerometer</a>
 							</li>
 						</ul>
 					</li>
@@ -84,13 +84,13 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="artecrobooutputparts.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="artecroboi2cparts.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="artecrobooutputparts.html#_outpin" class="tsd-kind-icon">_out<wbr>Pin</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="artecroboi2cparts.html#_i2cpin" class="tsd-kind-icon">_i2c<wbr>Pin</a></li>
 							</ul>
 						</section>
 					</div>
@@ -102,13 +102,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Artec<wbr>Robo<wbr>Output<wbr>Parts<span class="tsd-signature-symbol">(</span>artecRobo<span class="tsd-signature-symbol">: </span><a href="artecrobo.html" class="tsd-signature-type">ArtecRobo</a>, outPin<span class="tsd-signature-symbol">: </span><a href="outpin.html" class="tsd-signature-type">OutPin</a><span class="tsd-signature-symbol"> | </span><a href="../globals.html#outpinstring" class="tsd-signature-type">OutPinString</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="artecrobooutputparts.html" class="tsd-signature-type">ArtecRoboOutputParts</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Artec<wbr>Robo<wbr>I2CParts<span class="tsd-signature-symbol">(</span>artecRobo<span class="tsd-signature-symbol">: </span><a href="artecrobo.html" class="tsd-signature-type">ArtecRobo</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="artecroboi2cparts.html" class="tsd-signature-type">ArtecRoboI2CParts</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/f9988cf/src/atcrobo/parts/outputParts.ts#L9">atcrobo/parts/outputParts.ts:9</a></li>
+									<li>Defined in atcrobo/parts/i2cParts.ts:6</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -116,11 +116,8 @@
 								<li>
 									<h5>artecRobo: <a href="artecrobo.html" class="tsd-signature-type">ArtecRobo</a></h5>
 								</li>
-								<li>
-									<h5>outPin: <a href="outpin.html" class="tsd-signature-type">OutPin</a><span class="tsd-signature-symbol"> | </span><a href="../globals.html#outpinstring" class="tsd-signature-type">OutPinString</a></h5>
-								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="artecrobooutputparts.html" class="tsd-signature-type">ArtecRoboOutputParts</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="artecroboi2cparts.html" class="tsd-signature-type">ArtecRoboI2CParts</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -128,12 +125,12 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
-					<a name="_outpin" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _out<wbr>Pin</h3>
-					<div class="tsd-signature tsd-kind-icon">_out<wbr>Pin<span class="tsd-signature-symbol">:</span> <a href="outpin.html" class="tsd-signature-type">OutPin</a></div>
+					<a name="_i2cpin" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _i2c<wbr>Pin</h3>
+					<div class="tsd-signature tsd-kind-icon">_i2c<wbr>Pin<span class="tsd-signature-symbol">:</span> <a href="i2cpin.html" class="tsd-signature-type">I2CPin</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/f9988cf/src/atcrobo/parts/outputParts.ts#L9">atcrobo/parts/outputParts.ts:9</a></li>
+							<li>Defined in atcrobo/parts/i2cParts.ts:6</li>
 						</ul>
 					</aside>
 				</section>
@@ -152,13 +149,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
-						<a href="artecrobooutputparts.html" class="tsd-kind-icon">Artec<wbr>Robo<wbr>Output<wbr>Parts</a>
+						<a href="artecroboi2cparts.html" class="tsd-kind-icon">Artec<wbr>Robo<wbr>I2CParts</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="artecrobooutputparts.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="artecroboi2cparts.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
-								<a href="artecrobooutputparts.html#_outpin" class="tsd-kind-icon">_out<wbr>Pin</a>
+								<a href="artecroboi2cparts.html#_i2cpin" class="tsd-kind-icon">_i2c<wbr>Pin</a>
 							</li>
 						</ul>
 					</li>

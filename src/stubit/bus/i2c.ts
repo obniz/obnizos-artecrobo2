@@ -20,17 +20,17 @@ export class StuduinoBitI2C {
         studuinoBit.obniz.wait(5);
     }
 
-    public read(addr: number, n: number): Promise<number[]> {
-        return this.obnizI2c.readWait(addr, n);
+    public async read(addr: number, n: number): Promise<number[]> {
+        return await this.obnizI2c.readWait(addr, n);
     }
 
     public write(addr: number, buf: number[], repeat: boolean = false) {
         this.obnizI2c.write(addr, buf);
     }
 
-    public readFromMem(addr: number, memAddr: number, length: number): Promise<number[]> {
+    public async readFromMem(addr: number, memAddr: number, length: number): Promise<number[]> {
         this.obnizI2c.write(addr, [memAddr]);
-        return this.obnizI2c.readWait(addr, length);
+        return await this.obnizI2c.readWait(addr, length);
     }
 
     public writeToMem(addr: number, memAddr: number, data: number[]) {
