@@ -16,11 +16,20 @@ export class ICMRegisterRW {
 
         if (value === null) {
             const data = await this.i2c.readFromMem(this.address, register, 2);
+            // 2の補数 以下はコンパスの場合
+            // 0111 1111 1111 0000 4912 uT
+            // 1111 1111 1111 1111 -1 uT
+            // 1000 0000 0001 0000 -4912 uT
+            let val
             if (endian === "b") {
-                return data[0] << 8 | data[1];
+                val = data[0] << 8 | data[1];
             } else {
-                return data[1] << 8 | data[0];
+                val = data[1] << 8 | data[0];
             }
+            if ((val & (1 << 15))) {
+                val = val - 0x10000;
+            }
+            return val;
         }
         if (endian === "b") {
 

@@ -149,6 +149,10 @@ export class StuduinoBitICM20948 extends ICMRegisterRW {
         return this._ak09916!.magnetic();
     }
 
+    public async calibrateWait(){
+        return this._ak09916!.calibrateWait();
+    }
+
     public whoamiWait(): Promise<number> {
         // Value of the whoamiWait register. """
         return this.registerCharWait(this._WHO_AM_I) as Promise<number>;

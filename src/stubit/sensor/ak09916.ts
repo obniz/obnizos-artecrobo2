@@ -50,12 +50,22 @@ export class StuduinoBitAK09916 extends ICMRegisterRW {
     public async magnetic(): Promise<[number, number, number]> {
 
         // todo 再起動して計測してる
-        this.registerCharWait(this._CNTL2, this._MODE_POWER_DOWN);
-        this.registerCharWait(this._CNTL2, this.MODE_CONTINOUS_MEASURE_1);
+        //this.registerCharWait(this._CNTL2, this._MODE_POWER_DOWN);
+        //this.registerCharWait(this._CNTL2, this.MODE_CONTINOUS_MEASURE_1);
 
-        const x: number = (await this.registerShortWait(this._HXL, null, [0, 0], "l"))!;
-        const y: number = (await this.registerShortWait(this._HYL, null, [0, 0], "l"))!;
-        const z: number = (await this.registerShortWait(this._HZL, null, [0, 0], "l"))!;
+        // 0111 1111 1111 0000 4912 uT
+        // 1111 1111 1111 1111 -1 uT
+        // 1000 0000 0001 0000 -4912 uT
+        // data[0]下位ビット data[1] 上位ビット
+        let x: number = (await this.registerShortWait(this._HXL, null, [0, 0], "l"))!;
+        let y: number = (await this.registerShortWait(this._HYL, null, [0, 0], "l"))!;
+        let z: number = (await this.registerShortWait(this._HZL, null, [0, 0], "l"))!;
+
+        this.registerCharWait(this._ST2);
+
+        x *= this.so;
+        y *= this.so;
+        z *= this.so;
 
         const xyz: [number, number, number] = [
             (x - this.offset[0]) * this.scale[0] ,

@@ -9,7 +9,8 @@ import {StuduinoBitDisplay} from "./output/dsply";
 import {StuduinoBitLed} from "./output/led";
 import {StuduinoBitAccelerometer} from "./sensor/accelerometer";
 import {StuduinoBitButton} from "./sensor/button";
-import {StuduinoBitGyro} from "./sensor/gyro";
+import { StuduinoBitGyro } from "./sensor/gyro";
+import { StuduinoBitCompass } from "./sensor/compass";
 import {StuduinoBitICM20948} from "./sensor/icm20948";
 import {StuduinoBitLightSensor} from "./sensor/light";
 import {StuduinoBitTemperature} from "./sensor/temperature";
@@ -66,7 +67,7 @@ export class StuduinoBit {
     public temperature?: StuduinoBitTemperature;
     public accelerometer?: StuduinoBitAccelerometer;
     public gyro?: StuduinoBitGyro;
-    // public compass?: StuduinoBitCompas;
+    public compass?: StuduinoBitCompass;
     public icm20948?: StuduinoBitICM20948;
 
     constructor(id: string, options?: any) {
@@ -104,6 +105,7 @@ export class StuduinoBit {
         await this.icm20948.initWait();
         this.accelerometer = new StuduinoBitAccelerometer(this.icm20948);
         this.gyro = new StuduinoBitGyro(this.icm20948);
+        this.compass = new StuduinoBitCompass(this, this.icm20948);
         this.led = new StuduinoBitLed(this, {anode: 14});
         this.button_a = new StuduinoBitButton(this, {signal: 15});
         this.button_b = new StuduinoBitButton(this, {signal: 27});
@@ -146,6 +148,7 @@ export class StuduinoBit {
         this.icm20948 = undefined;
         this.accelerometer = undefined;
         this.gyro = undefined;
+        this.compass = undefined;
         this.p0 = undefined;
         this.p1 = undefined;
         this.p2 = undefined;

@@ -725,12 +725,21 @@ class ICMRegisterRW {
         return __awaiter(this, void 0, void 0, function* () {
             if (value === null) {
                 const data = yield this.i2c.readFromMem(this.address, register, 2);
+                // 2の補数 以下はコンパスの場合
+                // 0111 1111 1111 0000 4912 uT
+                // 1111 1111 1111 1111 -1 uT
+                // 1000 0000 0001 0000 -4912 uT
+                let val;
                 if (endian === "b") {
-                    return data[0] << 8 | data[1];
+                    val = data[0] << 8 | data[1];
                 }
                 else {
-                    return data[1] << 8 | data[0];
+                    val = data[1] << 8 | data[0];
                 }
+                if ((val & (1 << 15))) {
+                    val = val - 0x10000;
+                }
+                return val;
             }
             if (endian === "b") {
                 buf[0] = ((value >> 8) & 0xFF);
@@ -821,10 +830,21 @@ function hexToColor(hex) {
     return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
 }
 exports.hexToColor = hexToColor;
-exports.Cookies = { set: function (b, c, a = null) { b = [encodeURIComponent(b) + "=" + encodeURIComponent(c)]; a && ("expiry" in a && ("number" == typeof a.expiry && (a.expiry = new Date(1E3 * a.expiry + +new Date)), b.push("expires=" + a.expiry.toGMTString())), "domain" in a && b.push("domain=" + a.domain), "path" in a && b.push("path=" + a.path), "secure" in a && a.secure && b.push("secure")); document.cookie = b.join("; "); }, get: function (b, c = null) { for (var a = [], e = document.cookie.split(/; */), d = 0; d < e.length; d++) {
-        var f = e[d].split("=");
-        f[0] == encodeURIComponent(b) && a.push(decodeURIComponent(f[1].replace(/\+/g, "%20")));
-    } return c ? a : a[0]; }, clear: function (b, c) { c || (c = {}); c.expiry = -86400; this.set(b, "", c); } };
+exports.Cookies = {
+    set: function (b, c, a) {
+        b = [encodeURIComponent(b) + "=" + encodeURIComponent(c)];
+        a && ("expiry" in a && ("number" == typeof a.expiry && (a.expiry = new Date(1E3 * a.expiry + +new Date)), b.push("expires=" + a.expiry.toGMTString())), "domain" in a && b.push("domain=" + a.domain), "path" in a && b.push("path=" + a.path), "secure" in a && a.secure && b.push("secure"));
+        document.cookie = b.join("; ");
+    },
+    get: function (b) {
+        for (var a = [], e = document.cookie.split(/; */), d = 0; d < e.length; d++) {
+            var f = e[d].split("=");
+            f[0] == encodeURIComponent(b) && a.push(decodeURIComponent(f[1].replace(/\+/g, "%20")));
+        }
+        return a[0];
+    },
+    clear: function (b, c) { c || (c = {}); c.expiry = -86400; this.set(b, "", c); }
+};
 
 
 /***/ }),
@@ -1130,6 +1150,7 @@ const led_1 = __webpack_require__("./src/stubit/output/led.ts");
 const accelerometer_1 = __webpack_require__("./src/stubit/sensor/accelerometer.ts");
 const button_1 = __webpack_require__("./src/stubit/sensor/button.ts");
 const gyro_1 = __webpack_require__("./src/stubit/sensor/gyro.ts");
+const compass_1 = __webpack_require__("./src/stubit/sensor/compass.ts");
 const icm20948_1 = __webpack_require__("./src/stubit/sensor/icm20948.ts");
 const light_1 = __webpack_require__("./src/stubit/sensor/light.ts");
 const temperature_1 = __webpack_require__("./src/stubit/sensor/temperature.ts");
@@ -1167,6 +1188,7 @@ class StuduinoBit {
             yield this.icm20948.initWait();
             this.accelerometer = new accelerometer_1.StuduinoBitAccelerometer(this.icm20948);
             this.gyro = new gyro_1.StuduinoBitGyro(this.icm20948);
+            this.compass = new compass_1.StuduinoBitCompass(this, this.icm20948);
             this.led = new led_1.StuduinoBitLed(this, { anode: 14 });
             this.button_a = new button_1.StuduinoBitButton(this, { signal: 15 });
             this.button_b = new button_1.StuduinoBitButton(this, { signal: 27 });
@@ -1208,6 +1230,7 @@ class StuduinoBit {
         this.icm20948 = undefined;
         this.accelerometer = undefined;
         this.gyro = undefined;
+        this.compass = undefined;
         this.p0 = undefined;
         this.p1 = undefined;
         this.p2 = undefined;
@@ -1703,11 +1726,19 @@ class StuduinoBitAK09916 extends icmRegisterRw_1.ICMRegisterRW {
     magnetic() {
         return __awaiter(this, void 0, void 0, function* () {
             // todo 再起動して計測してる
-            this.registerCharWait(this._CNTL2, this._MODE_POWER_DOWN);
-            this.registerCharWait(this._CNTL2, this.MODE_CONTINOUS_MEASURE_1);
-            const x = (yield this.registerShortWait(this._HXL, null, [0, 0], "l"));
-            const y = (yield this.registerShortWait(this._HYL, null, [0, 0], "l"));
-            const z = (yield this.registerShortWait(this._HZL, null, [0, 0], "l"));
+            //this.registerCharWait(this._CNTL2, this._MODE_POWER_DOWN);
+            //this.registerCharWait(this._CNTL2, this.MODE_CONTINOUS_MEASURE_1);
+            // 0111 1111 1111 0000 4912 uT
+            // 1111 1111 1111 1111 -1 uT
+            // 1000 0000 0001 0000 -4912 uT
+            // data[0]下位ビット data[1] 上位ビット
+            let x = (yield this.registerShortWait(this._HXL, null, [0, 0], "l"));
+            let y = (yield this.registerShortWait(this._HYL, null, [0, 0], "l"));
+            let z = (yield this.registerShortWait(this._HZL, null, [0, 0], "l"));
+            this.registerCharWait(this._ST2);
+            x *= this.so;
+            y *= this.so;
+            z *= this.so;
             const xyz = [
                 (x - this.offset[0]) * this.scale[0],
                 (y - this.offset[1]) * this.scale[1],
@@ -1800,6 +1831,182 @@ class StuduinoBitButton {
     }
 }
 exports.StuduinoBitButton = StuduinoBitButton;
+
+
+/***/ }),
+
+/***/ "./src/stubit/sensor/compass.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const common_1 = __webpack_require__("./src/stubit/common.ts");
+class StuduinoBitCompass {
+    constructor(studuinoBit, icm20948, fs = "2g", sf = "ms2") {
+        this.calibrated = false;
+        this.offset = [0, 0, 0];
+        this.scale = [1, 1, 1];
+        this.OFFSET_COOKIE_KEY = 'STUDUINO_MAGNETIC_OFFSET';
+        this.STUDUINO_MAGNETIC_SCALE = 'STUDUINO_MAGNETIC_SCALE';
+        this.studuinoBit = studuinoBit;
+        this._icm20948 = icm20948;
+        const offset = common_1.Cookies.get(this.OFFSET_COOKIE_KEY);
+        const scale = common_1.Cookies.get(this.STUDUINO_MAGNETIC_SCALE);
+        if (offset && scale) {
+            try {
+                const savedOffset = JSON.parse(offset);
+                const savedScale = JSON.parse(scale);
+                this.offset = savedOffset;
+                this.scale = savedScale;
+                this.calibrated = true;
+            }
+            catch (e) {
+            }
+        }
+    }
+    getXWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.getValuesWait())[0];
+        });
+    }
+    getYWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.getValuesWait())[1];
+        });
+    }
+    getZWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.getValuesWait())[2];
+        });
+    }
+    getValuesWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const mag = yield this._icm20948.magneticWait();
+            if (mag.length !== 3) {
+                throw new Error('Invalid format of magnetic');
+            }
+            let ret = [0, 0, 0];
+            for (let i = 0; i < mag.length; i++) {
+                ret[i] = (mag[i] - this.offset[i]) * this.scale[i];
+            }
+            return ret;
+        });
+    }
+    calibrateWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // const ret = await this._icm20948.calibrateWait(); // want to use display
+            this.offset = [0, 0, 0];
+            this.scale = [1, 1, 1];
+            let reading = yield this._icm20948.magneticWait();
+            let minx = reading[0];
+            let maxx = reading[0];
+            let miny = reading[1];
+            let maxy = reading[1];
+            let minz = reading[2];
+            let maxz = reading[2];
+            const display = this.studuinoBit.display;
+            display.on();
+            display.clear();
+            let count = 0;
+            let x = 0;
+            let y = 0;
+            let z = 0;
+            while (count < 16) {
+                if (display.getPixel(0, 0) === [0, 0, 10]) {
+                    display.setPixel(x, y, [0, 0, 0]);
+                }
+                display.off();
+                yield this.studuinoBit.wait(10);
+                const [ax, ay, az] = yield this.studuinoBit.accelerometer.getValuesWait();
+                x = (ax + 8) / 4;
+                y = (ay + 8) / 4;
+                x = Math.ceil(Math.min(Math.max(x, 0), 4));
+                y = Math.ceil(Math.min(Math.max(y, 0), 4));
+                if (x == 0 || x == 4 || y == 0 || y == 4) {
+                    if (display.getPixel(x, y)[0] + display.getPixel(x, y)[1] + display.getPixel(x, y)[2] === 0) {
+                        display.setPixel(x, y, [0x0a, 0, 0x0a]);
+                        reading = yield this._icm20948.magneticWait();
+                        minx = Math.min(minx, reading[0]);
+                        maxx = Math.max(maxx, reading[0]);
+                        miny = Math.min(miny, reading[1]);
+                        maxy = Math.max(maxy, reading[1]);
+                        minz = Math.min(minz, reading[2]);
+                        maxz = Math.max(maxz, reading[2]);
+                        display.setPixel(x, y, [0x0a, 0, 0]);
+                        count++;
+                    }
+                }
+                else {
+                    display.setPixel(x, y, [0, 0, 0x0a]);
+                }
+                display.on();
+                yield this.studuinoBit.wait(100);
+            }
+            // Hard iron correction
+            const offset_x = (maxx + minx) / 2;
+            const offset_y = (maxy + miny) / 2;
+            const offset_z = (maxz + minz) / 2;
+            this.offset = [offset_x, offset_y, offset_z];
+            // Soft iron correction
+            const avg_delta_x = (maxx - minx) / 2;
+            const avg_delta_y = (maxy - miny) / 2;
+            const avg_delta_z = (maxz - minz) / 2;
+            const avg_delta = (avg_delta_x + avg_delta_y + avg_delta_z) / 3;
+            const scale_x = avg_delta / avg_delta_x;
+            const scale_y = avg_delta / avg_delta_y;
+            const scale_z = avg_delta / avg_delta_z;
+            this.scale = [scale_x, scale_y, scale_z];
+            common_1.Cookies.set(this.OFFSET_COOKIE_KEY, JSON.stringify(this.offset));
+            common_1.Cookies.set(this.STUDUINO_MAGNETIC_SCALE, JSON.stringify(this.scale));
+            this.calibrated = true;
+            display.clear();
+            display.off();
+            return [this.offset, this.scale];
+        });
+    }
+    isCalibrated() {
+        return this.calibrated;
+    }
+    clearCalibration() {
+        this.offset = [0, 0, 0];
+        this.scale = [1, 1, 1];
+        common_1.Cookies.clear(this.OFFSET_COOKIE_KEY);
+        common_1.Cookies.clear(this.STUDUINO_MAGNETIC_SCALE);
+    }
+    headingWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.calibrated) {
+                yield this.calibrateWait();
+            }
+            const [ax, ay, az] = yield this.studuinoBit.accelerometer.getValuesWait();
+            let [mx, my, mz] = yield this.getValuesWait();
+            my *= -1;
+            mz *= -1;
+            const phi = Math.atan(ay / ax);
+            const psi = Math.atan(-1 * ax / (ay * Math.sin(phi) + az * Math.cos(phi)));
+            const theta = Math.atan((mz * Math.sin(phi) - my * Math.cos(phi)) / (mx * Math.cos(psi) + my * Math.sin(psi) * Math.sin(phi) + mz * Math.sin(psi) * Math.cos(phi)));
+            const deg = theta * 180 / Math.PI;
+            let offset;
+            if (mx < 0) {
+                offset = -90;
+            }
+            else {
+                offset = +90;
+            }
+            return (deg + offset) % 360;
+        });
+    }
+}
+exports.StuduinoBitCompass = StuduinoBitCompass;
 
 
 /***/ }),
@@ -1998,6 +2205,11 @@ class StuduinoBitICM20948 extends icmRegisterRw_1.ICMRegisterRW {
     magneticWait() {
         return __awaiter(this, void 0, void 0, function* () {
             return this._ak09916.magnetic();
+        });
+    }
+    calibrateWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this._ak09916.calibrateWait();
         });
     }
     whoamiWait() {
