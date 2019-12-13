@@ -1,0 +1,41 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="../../../artec.js"></script>
+</head>
+
+<body>
+  <div id="obniz-debug"></div>
+  <h1>obniz instant HTML</h1>
+  <br />
+
+  <script>
+    var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
+    stubit.onconnect = async function () {
+      while (1) {
+        let stateA = await stubit.button_a.isPressedWait();
+        if (stateA == true) {
+          let pressedB = stubit.button_b.wasPressed();
+          alert(Boolean(pressedB));
+        }
+      }
+
+      //wifi接続／動作確認用
+      ledBlink();
+    };
+    async function ledBlink() {
+      while (1) {
+        stubit.led.on();
+        await stubit.wait(500);
+        stubit.led.off();
+        await stubit.wait(500);
+      }
+    }
+  </script>
+</body>
+
+</html>

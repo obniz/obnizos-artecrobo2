@@ -159,7 +159,7 @@ export class StuduinoBitCompass {
     my *= -1;
     mz *= -1;
 
-    const phi = Math.atan(ay/ax);
+    const phi = Math.atan(ay/az);
     const psi = Math.atan(-1 * ax / (ay * Math.sin(phi) + az * Math.cos(phi)));
     const theta = Math.atan((mz * Math.sin(phi) - my * Math.cos(phi)) / (mx * Math.cos(psi) + my * Math.sin(psi) * Math.sin(phi) + mz * Math.sin(psi) * Math.cos(phi)))
     const deg = theta * 180 / Math.PI;
@@ -169,6 +169,6 @@ export class StuduinoBitCompass {
     } else {
       offset = +90;
     }
-    return (deg + offset) % 360;
+    return (deg + offset) % 360 + 180;
   }
 }
