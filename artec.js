@@ -293,6 +293,7 @@ class ArtecRoboAccelerometer extends i2cParts_1.ArtecRoboI2CParts {
             const _ = this._i2cPin.i2c.write(this.addr, [0x0D]);
             // self.wai = self._read_register(0x0D) // used in not used 
             this._i2cPin.i2c.writeToMem(this.addr, this.CTRL_REG2, [this.CTRL_REG2_RESET]);
+            // リセット後しばらくは時間が必要。単純に待つ以外にはNAKをかえさなくなるまでloopで待つ方法もある。
             yield this.artecRobo.studuinoBit.wait(10);
             yield this.standby();
             // # Set Portrait/Landscape mode
@@ -503,6 +504,10 @@ class ArtecRoboMotor extends motorParts_1.ArtecRoboMotorParts {
             [0x00, 0x01, 0x02, 0x03, 0x04],
             [0x08, 0x09, 0x0A, 0x0B, 0x0C],
         ];
+        this.CW = "cw";
+        this.CCW = "ccw";
+        this.BREAK = "break";
+        this.STOP = "stop";
         if (this._motorPin === artecRobo.m1) {
             this._p = 0;
         }
@@ -519,8 +524,8 @@ class ArtecRoboMotor extends motorParts_1.ArtecRoboMotorParts {
     stop() {
         this._action("stop");
     }
-    brake() {
-        this._action("brake");
+    break() {
+        this._action("break");
     }
     power(power) {
         if (power > 255 || power < 0 || !Number.isInteger(power)) {
@@ -541,7 +546,7 @@ class ArtecRoboMotor extends motorParts_1.ArtecRoboMotorParts {
         else if (motion === "stop") {
             index = 2;
         }
-        else if (motion === "brake") {
+        else if (motion === "break") {
             index = 3;
         }
         else {
@@ -566,6 +571,9 @@ class ArtecRoboMotor extends motorParts_1.ArtecRoboMotorParts {
             this._motorPin.i2c.write(this._ADDRESS, command);
         }
         this._currentMotion = motion;
+    }
+    action(action) {
+        this._action(action);
     }
 }
 exports.ArtecRoboMotor = ArtecRoboMotor;
@@ -2180,7 +2188,7 @@ class StuduinoBitCompass {
             let [mx, my, mz] = yield this.getValuesWait();
             my *= -1;
             mz *= -1;
-            const phi = Math.atan(ay / ax);
+            const phi = Math.atan(ay / az);
             const psi = Math.atan(-1 * ax / (ay * Math.sin(phi) + az * Math.cos(phi)));
             const theta = Math.atan((mz * Math.sin(phi) - my * Math.cos(phi)) / (mx * Math.cos(psi) + my * Math.sin(psi) * Math.sin(phi) + mz * Math.sin(psi) * Math.cos(phi)));
             const deg = theta * 180 / Math.PI;
@@ -2191,7 +2199,7 @@ class StuduinoBitCompass {
             else {
                 offset = +90;
             }
-            return (deg + offset) % 360;
+            return (deg + offset) % 360 + 180;
         });
     }
 }
