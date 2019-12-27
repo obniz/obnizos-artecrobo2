@@ -49,6 +49,8 @@ module.exports = {
       mode : "module",
       tsconfig : "./tsconfig.json",
       name : "Artec.js",
+      excludePrivate : true,
+      excludeProtected : true
     }),
   ],
 };

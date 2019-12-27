@@ -10,15 +10,23 @@
 
 <div id="obniz-debug"></div>
 <h1>obniz instant HTML</h1>
-<button id="red">red</button>
-<button id="green">green</button>
-<button id="blue">blue</button>
+
+<h2>Color</h2>
+<button id="white">White</button>
+<button id="red">Red</button>
+<button id="green">Green</button>
+<button id="blue">Blue</button>
+<br />
+<h2>Display</h2>
+<button id="on">Display on</button>
+<button id="off">Display off</button>
+<button id="clear">Display clear</button>
+<br />
+<button id="isOn">Is on</button>
+<button id="getPixel">Get pixel color</button>
 
 <script>
-
-
   var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
-  stubit.obniz.debugprint = true;
   stubit.onconnect = async function () {
     stubit.display.on();
 
@@ -34,23 +42,46 @@
       stubit.display.on();
     }
     stubit.display.setPixel(0,0,[0x4f, 0, 0]);
+
+    $("#white").click(() => {
+      oneColor([30, 30, 30]);
+    })
     $("#red").click(() => {
       oneColor([0x4f, 0, 0]);
     })
     $("#green").click(() => {
       oneColor([0, 0x4f, 0]);
     })
-
     $("#blue").click(() => {
       oneColor([0, 0, 0x4f]);
     })
+    
+    $("#on").click(() => {
+      stubit.display.on();
+    })
+    $("#off").click(() => {
+      stubit.display.off();
+    })
+    $("#clear").click(() => {
+      stubit.display.clear();
+    })
+
+    $("#getPixel").click(() => {
+      let pixel00 = stubit.display.getPixel(0,0);
+      alert("Pixel[0, 0]: (" + pixel00 + ")")
+    })
+    $("#isOn").click(() => {
+      let isOn = stubit.display.isOn();
+      alert("Display: " + ["Off", "On"][+isOn])
+    })
+    
     //初期
-    oneColor([0x4f, 0, 0]);
+    // oneColor([0x4f, 0, 0]);
+    oneColor("RED");
 
     //wifi接続／動作確認用
     ledBlink();
   }
-
 
   async function ledBlink() {
     while (1) {
