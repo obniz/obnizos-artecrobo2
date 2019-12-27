@@ -76,7 +76,12 @@ export class StuduinoBitDisplay {
 
         let  c: [number, number, number];
         if (typeof color === "string") {
-            c = [0, 0, 0];
+            if (BuiltinColor[color]) {
+                c = BuiltinColor[color]
+            } else {
+                console.log("invailed color")
+                c = [0, 0, 0];
+            }
         } else if (Array.isArray(color)) {
             c = color;
         } else {

@@ -1641,7 +1641,13 @@ class StuduinoBitDisplay {
     setPixel(x, y, color) {
         let c;
         if (typeof color === "string") {
-            c = [0, 0, 0];
+            if (const_1.BuiltinColor[color]) {
+                c = const_1.BuiltinColor[color];
+            }
+            else {
+                console.log("invailed color");
+                c = [0, 0, 0];
+            }
         }
         else if (Array.isArray(color)) {
             c = color;
