@@ -1,0 +1,30 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="../../../artec.js"></script>
+
+</head>
+
+<body>
+
+  <div id="obniz-debug"></div>
+  Light Value: <span id="light"></span>
+
+  <script>
+    var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
+    stubit.onconnect = async function () {
+
+      while(1) {
+        let light_value = await stubit.lightsensor.getValueWait()
+        $("#light").text(light_value)
+        console.log(light_value)
+      }
+    }
+  </script>
+</body>
+
+</html>
