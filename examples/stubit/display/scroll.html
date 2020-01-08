@@ -17,9 +17,9 @@
     var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
     stubit.onconnect = async function () {
       stubit.display.on();
-      await stubit.display.scrollWait('こんにちは　A B C D ');
+      await stubit.display.scrollWait('A B C D ');
       console.log('finished');
-      await stubit.display.scrollWait('1 2 3', 150, true, true);
+      await stubit.display.scrollWait('1 2 3 ', 150, true, true);
     }
 
   </script>

@@ -1,10 +1,12 @@
 import { Color, ColorToHex, hexToColor } from "../common";
+import { CHARACTER_MAP } from "./imageConst3";
 
 export class StuduinoBitImage {
 
   private _pixels: Color[][];
   private _color: Color;
   public static defaultColor: Color = [31, 0, 0];
+  public static CHARACTER_MAP: { [key: string]: string } = CHARACTER_MAP;
 
   constructor(param0: string | number, param1: Color | number | null, buffer: Array<number> | null, color: Color = [31, 0, 0]) {
     if (typeof param0 === 'string') {

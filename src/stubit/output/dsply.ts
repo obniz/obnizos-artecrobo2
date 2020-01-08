@@ -15,7 +15,7 @@ export class StuduinoBitDisplay {
     private _canvas: HTMLCanvasElement | null = null;
     protected width = 5;
     protected height = 5;
-
+    
     constructor(studioBit: StuduinoBit, options: WS2812BOptions) {
         this._studioBit = studioBit;
         this._enablePin = studioBit.obniz.io2;
@@ -171,19 +171,29 @@ export class StuduinoBitDisplay {
 
         this._paintColor = color || Image.defaultColor;
 
-        const ctx = this._ctx();
-        var metrics = ctx.measureText(text);
+        const disp_string: string = ' ' + text + ' ';
 
         while (true) {
-            for (let i = 0; i < metrics.width; i++) {
-                this.showText(text, -i, monospace);
-                if (wait) {
-                    await this._studioBit.wait(delay)
-                } else {
-                    if (loop) {
-                        throw new Error(`You can't loop with no wait`)
+            for (let i = 0; i < text.length; i++) {
+                const curr: any = Image.CHARACTER_MAP[disp_string[i]] ? Image.CHARACTER_MAP[disp_string[i]] : Image.CHARACTER_MAP["?"]
+                const next: any = Image.CHARACTER_MAP[disp_string[i+1]] ? Image.CHARACTER_MAP[disp_string[i+1]] : Image.CHARACTER_MAP["?"]
+                const currArr: any = curr.split(":")
+                const nextArr: any = next.split(":")
+                for (let j = 0; j < 5; j++) {
+                    let img: any = []
+                    for (let x = 0; x < 5; x++) {
+                        img.push((currArr[x].slice(j)).concat(nextArr[x].slice(0, j)))
                     }
-                    this._studioBit.wait(delay)
+                    const image: any = new Image(img.join(":"), null, null)
+                    this.showImage(image)
+                    if (wait) {
+                        await this._studioBit.wait(delay)
+                    } else {
+                        if (loop) {
+                            throw new Error(`You can't loop with no wait`)
+                        }
+                        this._studioBit.wait(delay)
+                    }
                 }
             }
             if (!loop) {
@@ -206,17 +216,9 @@ export class StuduinoBitDisplay {
     }
 
     protected showText(text: string, x:number = 0, monospace = false) {
-        const ctx = this._ctx();
-        const color: Color = this._paintColor;
-        const hex = ColorToHex(color);
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, this.width, this.height);
-        ctx.font = monospace ? `7px monospace` : `7px sans-serif`;
-        ctx.fillStyle = hex;
-        ctx.fillText(text, x, 5);
-
-        this.draw(ctx);
-        this._update();
+        let curr: any = Image.CHARACTER_MAP[text] ? Image.CHARACTER_MAP[text] : Image.CHARACTER_MAP["?"]
+        let image = new Image(curr, null, null)
+        this.showImage(image)
     }
 
     protected showNumber(number: number) {
