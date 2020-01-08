@@ -1,6 +1,6 @@
 import {Color} from "./common";
 
-export const BuiltinColor = {
+export const BuiltinColor :{[key:string]: Color} = {
     BLACK: [0, 0, 0] as Color,
     WHITE: [31, 31, 31] as Color,
     RED: [0xff, 0x00, 0x00] as Color,
