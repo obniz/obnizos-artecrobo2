@@ -184,7 +184,7 @@ export class StuduinoBitDisplay {
                     for (let x = 0; x < 5; x++) {
                         img.push((currArr[x].slice(j)).concat(nextArr[x].slice(0, j)))
                     }
-                    const image: any = new Image(img.join(":"), null, null)
+                    const image: any = new Image(img.join(":"), this._paintColor, null)
                     this.showImage(image)
                     if (wait) {
                         await this._studioBit.wait(delay)
@@ -217,7 +217,7 @@ export class StuduinoBitDisplay {
 
     protected showText(text: string, x:number = 0, monospace = false) {
         let curr: any = Image.CHARACTER_MAP[text] ? Image.CHARACTER_MAP[text] : Image.CHARACTER_MAP["?"]
-        let image = new Image(curr, null, null)
+        let image = new Image(curr, this._paintColor, null)
         this.showImage(image)
     }
 

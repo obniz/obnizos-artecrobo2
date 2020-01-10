@@ -1871,7 +1871,7 @@ class StuduinoBitDisplay {
                         for (let x = 0; x < 5; x++) {
                             img.push((currArr[x].slice(j)).concat(nextArr[x].slice(0, j)));
                         }
-                        const image = new image_1.StuduinoBitImage(img.join(":"), null, null);
+                        const image = new image_1.StuduinoBitImage(img.join(":"), this._paintColor, null);
                         this.showImage(image);
                         if (wait) {
                             yield this._studioBit.wait(delay);
@@ -1904,7 +1904,7 @@ class StuduinoBitDisplay {
     }
     showText(text, x = 0, monospace = false) {
         let curr = image_1.StuduinoBitImage.CHARACTER_MAP[text] ? image_1.StuduinoBitImage.CHARACTER_MAP[text] : image_1.StuduinoBitImage.CHARACTER_MAP["?"];
-        let image = new image_1.StuduinoBitImage(curr, null, null);
+        let image = new image_1.StuduinoBitImage(curr, this._paintColor, null);
         this.showImage(image);
     }
     showNumber(number) {
