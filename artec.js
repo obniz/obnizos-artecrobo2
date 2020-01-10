@@ -1641,7 +1641,13 @@ class StuduinoBitDisplay {
     setPixel(x, y, color) {
         let c;
         if (typeof color === "string") {
-            c = [0, 0, 0];
+            if (const_1.BuiltinColor[color]) {
+                c = const_1.BuiltinColor[color];
+            }
+            else {
+                console.log("invailed color");
+                c = [0, 0, 0];
+            }
         }
         else if (Array.isArray(color)) {
             c = color;
@@ -1718,8 +1724,8 @@ class StuduinoBitDisplay {
             this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
             const ctx = this._ctx();
             var metrics = ctx.measureText(text);
-            for (let i = 0; i < metrics.width; i++) {
-                while (true) {
+            while (true) {
+                for (let i = 0; i < metrics.width; i++) {
                     this.showText(text, -i, monospace);
                     if (wait) {
                         yield this._studioBit.wait(delay);
@@ -1730,9 +1736,9 @@ class StuduinoBitDisplay {
                         }
                         this._studioBit.wait(delay);
                     }
-                    if (!loop) {
-                        break;
-                    }
+                }
+                if (!loop) {
+                    break;
                 }
             }
         });
