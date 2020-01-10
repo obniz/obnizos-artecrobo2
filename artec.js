@@ -1083,21 +1083,21 @@ exports.Cookies = {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BuiltinColor = {
     BLACK: [0, 0, 0],
-    WHITE: [31, 31, 31],
-    RED: [0xff, 0x00, 0x00],
-    RIME: [0x00, 0xff, 0x00],
-    BLUE: [0x00, 0x00, 0xff],
-    YELLOW: [0xff, 0xff, 0x00],
-    CYAN: [0x00, 0xff, 0xff],
-    MAGENTA: [0xff, 0x00, 0xff],
-    SILVER: [0xc0, 0xc0, 0xc0],
-    GRAY: [0x80, 0x80, 0x80],
-    MAROON: [0x80, 0x00, 0x00],
-    OLIVE: [0x80, 0x80, 0x00],
-    GREEN: [0x00, 0x80, 0x00],
-    PURPLE: [0x80, 0x00, 0x80],
-    TEAL: [0x00, 0x80, 0x80],
-    NAVY: [0x00, 0x00, 0x80],
+    WHITE: [0x1f, 0x1f, 0x1f],
+    RED: [0x1f, 0x00, 0x00],
+    RIME: [0x00, 0x1f, 0x00],
+    BLUE: [0x00, 0x00, 0x1f],
+    YELLOW: [0x1f, 0x1f, 0x00],
+    CYAN: [0x00, 0x1f, 0x1f],
+    MAGENTA: [0x1f, 0x00, 0x1f],
+    SILVER: [0x17, 0x17, 0x17],
+    GRAY: [0x0f, 0x0f, 0x0f],
+    MAROON: [0x0f, 0x00, 0x00],
+    OLIVE: [0x0f, 0x0f, 0x00],
+    GREEN: [0x00, 0x0f, 0x00],
+    PURPLE: [0x0f, 0x00, 0x0f],
+    TEAL: [0x00, 0x0f, 0x0f],
+    NAVY: [0x00, 0x00, 0x0f],
     CLEAR: [0x00, 0x00, 0x00],
 };
 
@@ -1727,6 +1727,7 @@ class StuduinoBitDisplay {
         this._canvas = null;
         this.width = 5;
         this.height = 5;
+        this.PIX_MAXCOLOR_FACTOR = 31;
         this._studioBit = studioBit;
         this._enablePin = studioBit.obniz.io2;
         this.off();
@@ -1791,6 +1792,11 @@ class StuduinoBitDisplay {
         }
         else {
             throw new Error("color takes a [R,G,B] or #RGB");
+        }
+        if (c[0] < 0 || c[0] > this.PIX_MAXCOLOR_FACTOR ||
+            c[1] < 0 || c[1] > this.PIX_MAXCOLOR_FACTOR ||
+            c[2] < 0 || c[2] > this.PIX_MAXCOLOR_FACTOR) {
+            throw new Error(`color factor must be 0-${this.PIX_MAXCOLOR_FACTOR}`);
         }
         this._pixcels[this._getIndex(x, y)] = c;
         this._update();

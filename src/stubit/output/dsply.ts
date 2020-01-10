@@ -15,6 +15,8 @@ export class StuduinoBitDisplay {
     private _canvas: HTMLCanvasElement | null = null;
     protected width = 5;
     protected height = 5;
+
+    protected PIX_MAXCOLOR_FACTOR = 31;
     
     constructor(studioBit: StuduinoBit, options: WS2812BOptions) {
         this._studioBit = studioBit;
@@ -86,6 +88,12 @@ export class StuduinoBitDisplay {
             c = color;
         } else {
             throw new Error("color takes a [R,G,B] or #RGB");
+        }
+        
+        if (c[0] < 0 || c[0] > this.PIX_MAXCOLOR_FACTOR ||
+            c[1] < 0 || c[1] > this.PIX_MAXCOLOR_FACTOR ||
+            c[2] < 0 || c[2] > this.PIX_MAXCOLOR_FACTOR) {
+            throw new Error(`color factor must be 0-${this.PIX_MAXCOLOR_FACTOR}`)
         }
 
         this._pixcels[this._getIndex(x, y)] = c;
