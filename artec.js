@@ -2205,7 +2205,7 @@ class StuduinoBitCompass {
             else {
                 offset = +90;
             }
-            return (deg + offset) % 360 + 180;
+            return (deg + offset + 360) % 360;
         });
     }
 }
