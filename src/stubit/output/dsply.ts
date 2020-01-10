@@ -81,13 +81,17 @@ export class StuduinoBitDisplay {
             if (BuiltinColor[color]) {
                 c = BuiltinColor[color]
             } else {
-                console.log("invailed color")
+                console.log("Invailed color")
                 c = [0, 0, 0];
             }
         } else if (Array.isArray(color)) {
             c = color;
         } else {
             throw new Error("color takes a [R,G,B] or #RGB");
+        }
+
+        if (y < 0 || x < 0 || y >= this.height || x >= this.width) {
+            throw new Error('index out of bounds')
         }
         
         if (c[0] < 0 || c[0] > this.PIX_MAXCOLOR_FACTOR ||
