@@ -81,35 +81,36 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><a href="artecrobotouchsensor.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="artecrobotouchsensor.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="artecrobotouchsensor.html#getvaluewait" class="tsd-kind-icon">get<wbr>Value<wbr>Wait</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="artecrobotouchsensor.html#ispressedwait" class="tsd-kind-icon">is<wbr>Pressed<wbr>Wait</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 						<li class="tsd-signature tsd-kind-icon">new <wbr>Artec<wbr>Robo<wbr>Touch<wbr>Sensor<span class="tsd-signature-symbol">(</span>artecRobo<span class="tsd-signature-symbol">: </span><a href="artecrobo.html" class="tsd-signature-type">ArtecRobo</a>, inPin<span class="tsd-signature-symbol">: </span><a href="inpin.html" class="tsd-signature-type">InPin</a><span class="tsd-signature-symbol"> | </span><a href="../globals.html#inputpinstring" class="tsd-signature-type">InputPinString</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="artecrobotouchsensor.html" class="tsd-signature-type">ArtecRoboTouchSensor</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="artecroboinputparts.html">ArtecRoboInputParts</a>.<a href="artecroboinputparts.html#constructor">constructor</a></p>
+								<p>Overrides <a href="artecroboinputparts.html">ArtecRoboInputParts</a>.<a href="artecroboinputparts.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9bf65f7/src/atcrobo/parts/inputParts.ts#L8">atcrobo/parts/inputParts.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9914e31/src/atcrobo/parts/touch.ts#L10">atcrobo/parts/touch.ts:10</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -138,10 +139,27 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9bf65f7/src/atcrobo/parts/touch.ts#L6">atcrobo/parts/touch.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9914e31/src/atcrobo/parts/touch.ts#L17">atcrobo/parts/touch.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="ispressedwait" class="tsd-anchor"></a>
+					<h3>is<wbr>Pressed<wbr>Wait</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Pressed<wbr>Wait<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9914e31/src/atcrobo/parts/touch.ts#L27">atcrobo/parts/touch.ts:27</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -162,11 +180,14 @@
 					<li class="current tsd-kind-class">
 						<a href="artecrobotouchsensor.html" class="tsd-kind-icon">Artec<wbr>Robo<wbr>Touch<wbr>Sensor</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="artecrobotouchsensor.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="artecrobotouchsensor.html#getvaluewait" class="tsd-kind-icon">get<wbr>Value<wbr>Wait</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="artecrobotouchsensor.html#ispressedwait" class="tsd-kind-icon">is<wbr>Pressed<wbr>Wait</a>
 							</li>
 						</ul>
 					</li>
