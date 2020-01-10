@@ -108,6 +108,7 @@ const irPhtoRefrector_1 = __webpack_require__("./src/atcrobo/parts/irPhtoRefrect
 const led_1 = __webpack_require__("./src/atcrobo/parts/led.ts");
 const motor_1 = __webpack_require__("./src/atcrobo/parts/motor.ts");
 const servomotor_1 = __webpack_require__("./src/atcrobo/parts/servomotor.ts");
+const light_1 = __webpack_require__("./src/atcrobo/parts/light.ts");
 const sound_1 = __webpack_require__("./src/atcrobo/parts/sound.ts");
 const temperature_1 = __webpack_require__("./src/atcrobo/parts/temperature.ts");
 const touch_1 = __webpack_require__("./src/atcrobo/parts/touch.ts");
@@ -200,6 +201,7 @@ ArtecRobo.ServoMotor = servomotor_1.ArtecRoboServoMotor;
 ArtecRobo.IrPhotoRefrector = irPhtoRefrector_1.ArtecRoboIrPhotoRefrector;
 ArtecRobo.Temperature = temperature_1.ArtecRoboTemperature;
 ArtecRobo.SoundSensor = sound_1.ArtecRoboSoundSensor;
+ArtecRobo.LightSensor = light_1.ArtecRoboLightSensor;
 exports.ArtecRobo = ArtecRobo;
 
 
@@ -483,6 +485,33 @@ class ArtecRoboLed extends outputParts_1.ArtecRoboOutputParts {
     }
 }
 exports.ArtecRoboLed = ArtecRoboLed;
+
+
+/***/ }),
+
+/***/ "./src/atcrobo/parts/light.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const inputParts_1 = __webpack_require__("./src/atcrobo/parts/inputParts.ts");
+class ArtecRoboLightSensor extends inputParts_1.ArtecRoboInputParts {
+    getValueWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this._inPin.terminalPin.readAnalogWait();
+        });
+    }
+}
+exports.ArtecRoboLightSensor = ArtecRoboLightSensor;
 
 
 /***/ }),
