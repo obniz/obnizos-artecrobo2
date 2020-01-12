@@ -15,6 +15,8 @@ export class StuduinoBitDisplay {
     private _canvas: HTMLCanvasElement | null = null;
     protected width = 5;
     protected height = 5;
+
+    protected PIX_MAXCOLOR_FACTOR = 31;
     
     constructor(studioBit: StuduinoBit, options: WS2812BOptions) {
         this._studioBit = studioBit;
@@ -79,13 +81,23 @@ export class StuduinoBitDisplay {
             if (BuiltinColor[color]) {
                 c = BuiltinColor[color]
             } else {
-                console.log("invailed color")
+                console.log("Invailed color")
                 c = [0, 0, 0];
             }
         } else if (Array.isArray(color)) {
             c = color;
         } else {
             throw new Error("color takes a [R,G,B] or #RGB");
+        }
+
+        if (y < 0 || x < 0 || y >= this.height || x >= this.width) {
+            throw new Error('index out of bounds')
+        }
+        
+        if (c[0] < 0 || c[0] > this.PIX_MAXCOLOR_FACTOR ||
+            c[1] < 0 || c[1] > this.PIX_MAXCOLOR_FACTOR ||
+            c[2] < 0 || c[2] > this.PIX_MAXCOLOR_FACTOR) {
+            throw new Error(`color factor must be 0-${this.PIX_MAXCOLOR_FACTOR}`)
         }
 
         this._pixcels[this._getIndex(x, y)] = c;
@@ -184,7 +196,7 @@ export class StuduinoBitDisplay {
                     for (let x = 0; x < 5; x++) {
                         img.push((currArr[x].slice(j)).concat(nextArr[x].slice(0, j)))
                     }
-                    const image: any = new Image(img.join(":"), null, null)
+                    const image: any = new Image(img.join(":"), this._paintColor, null)
                     this.showImage(image)
                     if (wait) {
                         await this._studioBit.wait(delay)
@@ -217,7 +229,7 @@ export class StuduinoBitDisplay {
 
     protected showText(text: string, x:number = 0, monospace = false) {
         let curr: any = Image.CHARACTER_MAP[text] ? Image.CHARACTER_MAP[text] : Image.CHARACTER_MAP["?"]
-        let image = new Image(curr, null, null)
+        let image = new Image(curr, this._paintColor, null)
         this.showImage(image)
     }
 

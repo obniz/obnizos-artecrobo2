@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
-  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="https://unpkg.com/obniz@3.0.0/obniz.js"></script>
   <script src="../../../artec.js" ></script>
 </head>
 <body>
@@ -13,6 +13,24 @@
 <button id="red">red</button>
 <button id="green">green</button>
 <button id="blue">blue</button>
+<br>---<br>
+<button class="btn" id="BLACK">BLACK</button>
+<button class="btn" id="WHITE">WHITE</button>
+<button class="btn" id="RED">RED</button>
+<button class="btn" id="RIME">RIME</button>
+<button class="btn" id="BLUE">BLUE</button>
+<button class="btn" id="YELLOW">YELLOW</button>
+<button class="btn" id="CYAN">CYAN</button>
+<button class="btn" id="MAGENTA">MAGENTA</button>
+<button class="btn" id="SILVER">SILVER</button>
+<button class="btn" id="GRAY">GRAY</button>
+<button class="btn" id="MAROON">MAROON</button>
+<button class="btn" id="OLIVE">OLIVE</button>
+<button class="btn" id="GREEN">GREEN</button>
+<button class="btn" id="PURPLE">PURPLE</button>
+<button class="btn" id="TEAL">TEAL</button>
+<button class="btn" id="NAVY">NAVY</button>
+<button class="btn" id="CLEAR">CLEAR</button>
 
 <script>
 
@@ -33,19 +51,24 @@
       }
       stubit.display.on();
     }
-    stubit.display.setPixel(0,0,[0x4f, 0, 0]);
+    
     $("#red").click(() => {
-      oneColor([0x4f, 0, 0]);
+      oneColor([0x1f, 0, 0]);
     })
     $("#green").click(() => {
-      oneColor([0, 0x4f, 0]);
+      oneColor([0, 0x1f, 0]);
+    })
+    $("#blue").click(() => {
+      oneColor([0, 0, 0x1f]);
     })
 
-    $("#blue").click(() => {
-      oneColor([0, 0, 0x4f]);
+    $(".btn").on('click', function() {
+      console.log($(this).attr("id"))
+      oneColor($(this).attr("id"));
     })
+
     //初期
-    oneColor([0x4f, 0, 0]);
+    oneColor([0x1f, 0, 0]);
 
     //wifi接続／動作確認用
     ledBlink();
