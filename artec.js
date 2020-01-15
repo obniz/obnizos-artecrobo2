@@ -771,9 +771,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const inputParts_1 = __webpack_require__("./src/atcrobo/parts/inputParts.ts");
 class ArtecRoboTouchSensor extends inputParts_1.ArtecRoboInputParts {
+    constructor(artecRobo, inPin) {
+        super(artecRobo, inPin);
+        this._artecRobo = artecRobo;
+    }
     getValueWait() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this._inPin.terminalPin.readDigitalWait();
+            if (this._inPin === this._artecRobo.p2) {
+                let bool = yield this._inPin.terminalPin.readAnalogWait();
+                return Math.min(Number(bool), 1);
+            }
+            else {
+                let bool = yield this._inPin.terminalPin.readDigitalWait();
+                return Number(bool);
+            }
+        });
+    }
+    isPressedWait() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this._inPin === this._artecRobo.p2) {
+                let bool = yield this._inPin.terminalPin.readAnalogWait();
+                return !bool;
+            }
+            else {
+                let bool = yield this._inPin.terminalPin.readDigitalWait();
+                return !bool;
+            }
         });
     }
 }

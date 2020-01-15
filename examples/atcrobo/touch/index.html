@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
-  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="https://unpkg.com/obniz@3.0.0/obniz.js"></script>
   <script src="../../../artec.js"></script>
 </head>
 <body>
@@ -25,7 +25,10 @@ Touch Sensor:<span id="sensor"></span><br/>
     ledBlink();
 
     while (1) {
-      let data = await sensor.getValueWait();
+      let data = await sensor.isPressedWait();
+      console.log(data)
+      // let val = await sensor.getValueWait();
+      // console.log(val)
       $("#sensor").text( data ? "touched" : "release");
     }
   };
