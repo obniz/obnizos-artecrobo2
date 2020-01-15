@@ -104,7 +104,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = __webpack_require__("./src/stubit/index.ts");
 const bzr_1 = __webpack_require__("./src/atcrobo/parts/bzr.ts");
 const acc_1 = __webpack_require__("./src/atcrobo/parts/acc.ts");
-const irPhtoRefrector_1 = __webpack_require__("./src/atcrobo/parts/irPhtoRefrector.ts");
+const irPhotoReflector_1 = __webpack_require__("./src/atcrobo/parts/irPhotoReflector.ts");
 const led_1 = __webpack_require__("./src/atcrobo/parts/led.ts");
 const motor_1 = __webpack_require__("./src/atcrobo/parts/motor.ts");
 const servomotor_1 = __webpack_require__("./src/atcrobo/parts/servomotor.ts");
@@ -198,7 +198,7 @@ ArtecRobo.Motor = motor_1.ArtecRoboMotor;
 ArtecRobo.Buzzer = bzr_1.ArtecRoboBuzzer;
 ArtecRobo.Accelerometer = acc_1.ArtecRoboAccelerometer;
 ArtecRobo.ServoMotor = servomotor_1.ArtecRoboServoMotor;
-ArtecRobo.IrPhotoRefrector = irPhtoRefrector_1.ArtecRoboIrPhotoRefrector;
+ArtecRobo.IrPhotoReflector = irPhotoReflector_1.ArtecRoboIrPhotoReflector;
 ArtecRobo.Temperature = temperature_1.ArtecRoboTemperature;
 ArtecRobo.SoundSensor = sound_1.ArtecRoboSoundSensor;
 ArtecRobo.LightSensor = light_1.ArtecRoboLightSensor;
@@ -437,7 +437,7 @@ exports.ArtecRoboInputParts = ArtecRoboInputParts;
 
 /***/ }),
 
-/***/ "./src/atcrobo/parts/irPhtoRefrector.ts":
+/***/ "./src/atcrobo/parts/irPhotoReflector.ts":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -452,14 +452,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const inputParts_1 = __webpack_require__("./src/atcrobo/parts/inputParts.ts");
-class ArtecRoboIrPhotoRefrector extends inputParts_1.ArtecRoboInputParts {
+class ArtecRoboIrPhotoReflector extends inputParts_1.ArtecRoboInputParts {
     getValueWait() {
         return __awaiter(this, void 0, void 0, function* () {
             return this._inPin.terminalPin.readAnalogWait();
         });
     }
 }
-exports.ArtecRoboIrPhotoRefrector = ArtecRoboIrPhotoRefrector;
+exports.ArtecRoboIrPhotoReflector = ArtecRoboIrPhotoReflector;
 
 
 /***/ }),
