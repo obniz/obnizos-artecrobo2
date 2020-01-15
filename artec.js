@@ -1323,12 +1323,13 @@ class StuduinoBitImage {
         if (value < 0 || 9 < value) {
             throw new Error(`value must be within 0 to 9`);
         }
+        let v = Math.floor(StuduinoBitImage.PIX_MAXCOLOR_FACTOR * value / 9);
+        let color = [v, v, v];
         for (let y = 0; y < this.height(); y++) {
             for (let x = 0; x < this.width(); x++) {
-                // 変換方法が不明
+                this.setPixelColor(x, y, this.getPixel(x, y) ? color : [0, 0, 0]);
             }
         }
-        throw new Error('WIP');
     }
     paste(src, x, y) {
         for (let indexy = 0; indexy < src.height() && (indexy + y) < this.height(); indexy++) {
@@ -1369,6 +1370,7 @@ class StuduinoBitImage {
 }
 StuduinoBitImage.defaultColor = [31, 0, 0];
 StuduinoBitImage.CHARACTER_MAP = imageConst3_1.CHARACTER_MAP;
+StuduinoBitImage.PIX_MAXCOLOR_FACTOR = 31;
 exports.StuduinoBitImage = StuduinoBitImage;
 
 
@@ -1750,7 +1752,7 @@ class StuduinoBitDisplay {
         this._canvas = null;
         this.width = 5;
         this.height = 5;
-        this.PIX_MAXCOLOR_FACTOR = 31;
+        this.PIX_MAXCOLOR_FACTOR = image_1.StuduinoBitImage.PIX_MAXCOLOR_FACTOR;
         this._studioBit = studioBit;
         this._enablePin = studioBit.obniz.io2;
         this.off();

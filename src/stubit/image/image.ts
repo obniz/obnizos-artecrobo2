@@ -7,6 +7,7 @@ export class StuduinoBitImage {
   private _color: Color;
   public static defaultColor: Color = [31, 0, 0];
   public static CHARACTER_MAP: { [key: string]: string } = CHARACTER_MAP;
+  public static PIX_MAXCOLOR_FACTOR = 31;
 
   constructor(param0: string | number, param1: Color | number | null, buffer: Array<number> | null, color: Color = [31, 0, 0]) {
     if (typeof param0 === 'string') {
@@ -212,12 +213,13 @@ export class StuduinoBitImage {
     if (value < 0 || 9 < value) {
       throw new Error(`value must be within 0 to 9`)
     }
+    let v = Math.floor(StuduinoBitImage.PIX_MAXCOLOR_FACTOR * value / 9);
+    let color: Color = [v, v, v]
     for (let y = 0; y < this.height(); y++) {
       for (let x = 0; x < this.width(); x++) {
-        // 変換方法が不明
+        this.setPixelColor(x, y, this.getPixel(x, y) ? color : [0, 0, 0]);
       }
     }
-    throw new Error('WIP')
   }
 
   protected paste(src: StuduinoBitImage, x: number , y:number) {

@@ -16,7 +16,7 @@ export class StuduinoBitDisplay {
     protected width = 5;
     protected height = 5;
 
-    protected PIX_MAXCOLOR_FACTOR = 31;
+    protected PIX_MAXCOLOR_FACTOR = Image.PIX_MAXCOLOR_FACTOR;
     
     constructor(studioBit: StuduinoBit, options: WS2812BOptions) {
         this._studioBit = studioBit;
