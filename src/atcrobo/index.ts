@@ -1,7 +1,7 @@
 import {StuduinoBit} from "../stubit/index";
 import {ArtecRoboBuzzer} from "./parts/bzr";
 import { ArtecRoboAccelerometer } from "./parts/acc";
-import {ArtecRoboIrPhotoRefrector} from "./parts/irPhtoRefrector";
+import {ArtecRoboIrPhotoReflector} from "./parts/irPhotoReflector";
 import {ArtecRoboLed} from "./parts/led";
 import {ArtecRoboMotor} from "./parts/motor";
 import {ArtecRoboServoMotor} from "./parts/servomotor";
@@ -28,7 +28,7 @@ export class ArtecRobo {
     public static Buzzer = ArtecRoboBuzzer;
     public static Accelerometer = ArtecRoboAccelerometer;
     public static ServoMotor = ArtecRoboServoMotor;
-    public static IrPhotoRefrector = ArtecRoboIrPhotoRefrector;
+    public static IrPhotoReflector = ArtecRoboIrPhotoReflector;
     public static Temperature = ArtecRoboTemperature;
     public static SoundSensor = ArtecRoboSoundSensor;
     public static LightSensor = ArtecRoboLightSensor;
