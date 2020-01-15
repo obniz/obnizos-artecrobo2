@@ -2306,8 +2306,8 @@ class StuduinoBitCompass {
                 const [ax, ay, az] = yield this.studuinoBit.accelerometer.getValuesWait();
                 x = (ax + 8) / 4;
                 y = (ay + 8) / 4;
-                x = Math.ceil(Math.min(Math.max(x, 0), 4));
-                y = Math.ceil(Math.min(Math.max(y, 0), 4));
+                x = Math.round(Math.min(Math.max(x, 0), 4));
+                y = Math.round(Math.min(Math.max(y, 0), 4));
                 if (x == 0 || x == 4 || y == 0 || y == 4) {
                     if (display.getPixel(x, y)[0] + display.getPixel(x, y)[1] + display.getPixel(x, y)[2] === 0) {
                         display.setPixel(x, y, [0x0a, 0, 0x0a]);
