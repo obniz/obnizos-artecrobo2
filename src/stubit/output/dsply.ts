@@ -172,14 +172,57 @@ export class StuduinoBitDisplay {
         if (clear) {
             this.clear();
         }
-    }
-    
-    public async scrollWait(text: string,
+    } public async scrollWait(text: string,
         delay: number = 150,
         wait: boolean = true,
         loop: boolean = false,
         monospace: boolean = false,
         color: Color | null = null) {
+
+        if (wait) {
+            await this.scrollWaitDraw(text, delay, loop, monospace, color)
+        } else {
+            if (loop) {
+                throw new Error(`You can't loop with no wait`)
+            }
+            this.scrollDraw(text, delay, loop, monospace, color)
+        }
+    }
+
+    public async scrollDraw(text: string, delay: number, loop: boolean, monospace: boolean, color: Color | null = null) {
+
+        this._paintColor = color || Image.defaultColor;
+
+        const disp_string: string = ' ' + text + ' ';
+
+        while (true) {
+            for (let i = 0; i < text.length; i++) {
+                const curr: any = Image.CHARACTER_MAP[disp_string[i]] ? Image.CHARACTER_MAP[disp_string[i]] : Image.CHARACTER_MAP["?"]
+                const next: any = Image.CHARACTER_MAP[disp_string[i + 1]] ? Image.CHARACTER_MAP[disp_string[i + 1]] : Image.CHARACTER_MAP["?"]
+                const currArr: any = curr.split(":")
+                const nextArr: any = next.split(":")
+                for (let j = 0; j < 5; j++) {
+                    let img: any = []
+                    for (let x = 0; x < 5; x++) {
+                        img.push((currArr[x].slice(j)).concat(nextArr[x].slice(0, j)))
+                    }
+                    const image: any = new Image(img.join(":"), this._paintColor, null)
+
+                    await new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve(this.showImage(image))
+                        }, delay)
+                    })
+
+                }
+            }
+            if (!loop) {
+                break;
+            }
+        }
+    }
+
+    public async scrollWaitDraw(text: string, delay: number, loop: boolean, monospace: boolean, color: Color | null = null) {
 
         this._paintColor = color || Image.defaultColor;
 
@@ -198,14 +241,7 @@ export class StuduinoBitDisplay {
                     }
                     const image: any = new Image(img.join(":"), this._paintColor, null)
                     this.showImage(image)
-                    if (wait) {
-                        await this._studioBit.wait(delay)
-                    } else {
-                        if (loop) {
-                            throw new Error(`You can't loop with no wait`)
-                        }
-                        this._studioBit.wait(delay)
-                    }
+                    await this._studioBit.wait(delay)
                 }
             }
             if (!loop) {
