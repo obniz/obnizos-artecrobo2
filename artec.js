@@ -1856,6 +1856,19 @@ class StuduinoBitDisplay {
     }
     showWait(iterable, delay = 400, wait = true, loop = false, clear = false, color = null) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (wait) {
+                yield this.showDraw(iterable, delay, wait, loop, clear, color);
+            }
+            else {
+                if (loop) {
+                    throw new Error(`You can't loop with no wait`);
+                }
+                this.showDraw(iterable, delay, wait, loop, clear, color);
+            }
+        });
+    }
+    showDraw(iterable, delay = 400, wait = true, loop = false, clear = false, color = null) {
+        return __awaiter(this, void 0, void 0, function* () {
             this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
             while (true) {
                 for (const item of iterable) {
@@ -1871,15 +1884,7 @@ class StuduinoBitDisplay {
                     else {
                         throw new Error(`It can't be shown`);
                     }
-                    if (wait) {
-                        yield this._studioBit.wait(delay);
-                    }
-                    else {
-                        if (loop) {
-                            throw new Error(`You can't loop with no wait`);
-                        }
-                        this._studioBit.wait(delay);
-                    }
+                    yield this._studioBit.wait(delay);
                 }
                 if (!loop) {
                     break;
@@ -1891,6 +1896,19 @@ class StuduinoBitDisplay {
         });
     }
     scrollWait(text, delay = 150, wait = true, loop = false, monospace = false, color = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (wait) {
+                yield this.scrollDraw(text, delay, wait, loop, monospace, color);
+            }
+            else {
+                if (loop) {
+                    throw new Error(`You can't loop with no wait`);
+                }
+                this.scrollDraw(text, delay, wait, loop, monospace, color);
+            }
+        });
+    }
+    scrollDraw(text, delay, wait, loop, monospace, color = null) {
         return __awaiter(this, void 0, void 0, function* () {
             this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
             const disp_string = ' ' + text + ' ';
@@ -1907,15 +1925,7 @@ class StuduinoBitDisplay {
                         }
                         const image = new image_1.StuduinoBitImage(img.join(":"), this._paintColor, null);
                         this.showImage(image);
-                        if (wait) {
-                            yield this._studioBit.wait(delay);
-                        }
-                        else {
-                            if (loop) {
-                                throw new Error(`You can't loop with no wait`);
-                            }
-                            this._studioBit.wait(delay);
-                        }
+                        yield this._studioBit.wait(delay);
                     }
                 }
                 if (!loop) {
