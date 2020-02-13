@@ -1856,6 +1856,19 @@ class StuduinoBitDisplay {
     }
     showWait(iterable, delay = 400, wait = true, loop = false, clear = false, color = null) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (wait) {
+                yield this.showDraw(iterable, delay, wait, loop, clear, color);
+            }
+            else {
+                if (loop) {
+                    throw new Error(`You can't loop with no wait`);
+                }
+                this.showDraw(iterable, delay, wait, loop, clear, color);
+            }
+        });
+    }
+    showDraw(iterable, delay = 400, wait = true, loop = false, clear = false, color = null) {
+        return __awaiter(this, void 0, void 0, function* () {
             this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
             while (true) {
                 for (const item of iterable) {
@@ -1871,15 +1884,7 @@ class StuduinoBitDisplay {
                     else {
                         throw new Error(`It can't be shown`);
                     }
-                    if (wait) {
-                        yield this._studioBit.wait(delay);
-                    }
-                    else {
-                        if (loop) {
-                            throw new Error(`You can't loop with no wait`);
-                        }
-                        this._studioBit.wait(delay);
-                    }
+                    yield this._studioBit.wait(delay);
                 }
                 if (!loop) {
                     break;
@@ -1893,46 +1898,17 @@ class StuduinoBitDisplay {
     scrollWait(text, delay = 150, wait = true, loop = false, monospace = false, color = null) {
         return __awaiter(this, void 0, void 0, function* () {
             if (wait) {
-                yield this.scrollWaitDraw(text, delay, loop, monospace, color);
+                yield this.scrollDraw(text, delay, wait, loop, monospace, color);
             }
             else {
                 if (loop) {
                     throw new Error(`You can't loop with no wait`);
                 }
-                this.scrollDraw(text, delay, loop, monospace, color);
+                this.scrollDraw(text, delay, wait, loop, monospace, color);
             }
         });
     }
-    scrollDraw(text, delay, loop, monospace, color = null) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
-            const disp_string = ' ' + text + ' ';
-            while (true) {
-                for (let i = 0; i < text.length; i++) {
-                    const curr = image_1.StuduinoBitImage.CHARACTER_MAP[disp_string[i]] ? image_1.StuduinoBitImage.CHARACTER_MAP[disp_string[i]] : image_1.StuduinoBitImage.CHARACTER_MAP["?"];
-                    const next = image_1.StuduinoBitImage.CHARACTER_MAP[disp_string[i + 1]] ? image_1.StuduinoBitImage.CHARACTER_MAP[disp_string[i + 1]] : image_1.StuduinoBitImage.CHARACTER_MAP["?"];
-                    const currArr = curr.split(":");
-                    const nextArr = next.split(":");
-                    for (let j = 0; j < 5; j++) {
-                        let img = [];
-                        for (let x = 0; x < 5; x++) {
-                            img.push((currArr[x].slice(j)).concat(nextArr[x].slice(0, j)));
-                        }
-                        const image = new image_1.StuduinoBitImage(img.join(":"), this._paintColor, null);
-                        yield new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve(this.showImage(image));
-                            }, delay);
-                        });
-                    }
-                }
-                if (!loop) {
-                    break;
-                }
-            }
-        });
-    }
-    scrollWaitDraw(text, delay, loop, monospace, color = null) {
+    scrollDraw(text, delay, wait, loop, monospace, color = null) {
         return __awaiter(this, void 0, void 0, function* () {
             this._paintColor = color || image_1.StuduinoBitImage.defaultColor;
             const disp_string = ' ' + text + ' ';
