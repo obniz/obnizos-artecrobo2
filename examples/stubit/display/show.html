@@ -22,10 +22,13 @@
     stubit.onconnect = async function () {
       stubit.display.on();
       await stubit.display.showWait([0, 1, 2], 1000);
-
-      await stubit.display.showWait(['A', 'B', 'C'], 1000, true, false, true, [0, 0, 31]);
-
-      await stubit.display.showWait(['A', 'B', 'C'], 1000, true, false, true, [0, 0, 31]);
+      console.log("1");
+      await stubit.buzzer.onWait("F4", 1000);
+      console.log("2")
+      await stubit.display.showWait(['A', 'B', 'C'], 1000, false, false, true, [0, 0, 31]);
+      console.log("3")
+      await stubit.buzzer.onWait("F4", 1000);
+      console.log("4")
     }
 
   </script>
