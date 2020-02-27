@@ -1,0 +1,42 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+  <script src="https://unpkg.com/obniz@3.0.0/obniz.js"></script>
+  <script src="../../../artec.js"></script>
+</head>
+<body>
+
+<div id="obniz-debug"></div>
+<h1>obniz instant HTML</h1>
+<br/><br/>
+Ultrasonic Sensor:<span id="sensor"></span><br/>
+
+<script>
+
+
+  var atcRobo = new Artec.ArtecRobo("YOUR_STUDUIOBIT_ID");
+
+  atcRobo.onconnect = async function () {
+    let sensor = new Artec.ArtecRobo.UltrasonicSensor(atcRobo, 'P0');
+
+    //wifi接続／動作確認用
+    ledBlink();
+
+    sensor.getDistance();
+  };
+
+
+  async function ledBlink() {
+    while (1) {
+      atcRobo.studuinoBit.led.on();
+      await atcRobo.studuinoBit.wait(500);
+      atcRobo.studuinoBit.led.off();
+      await atcRobo.studuinoBit.wait(500);
+    }
+  }
+
+</script>
+</body>
+</html>

@@ -112,6 +112,7 @@ const light_1 = __webpack_require__("./src/atcrobo/parts/light.ts");
 const sound_1 = __webpack_require__("./src/atcrobo/parts/sound.ts");
 const temperature_1 = __webpack_require__("./src/atcrobo/parts/temperature.ts");
 const touch_1 = __webpack_require__("./src/atcrobo/parts/touch.ts");
+const ultrasonic_1 = __webpack_require__("./src/atcrobo/parts/ultrasonic.ts");
 const i2cPin_1 = __webpack_require__("./src/atcrobo/pin/i2cPin.ts");
 const inPin_1 = __webpack_require__("./src/atcrobo/pin/inPin.ts");
 const motorPin_1 = __webpack_require__("./src/atcrobo/pin/motorPin.ts");
@@ -194,6 +195,7 @@ class ArtecRobo {
 }
 ArtecRobo.Led = led_1.ArtecRoboLed;
 ArtecRobo.TouchSensor = touch_1.ArtecRoboTouchSensor;
+ArtecRobo.UltrasonicSensor = ultrasonic_1.ArtecRoboUltrasonicSensor;
 ArtecRobo.Motor = motor_1.ArtecRoboMotor;
 ArtecRobo.Buzzer = bzr_1.ArtecRoboBuzzer;
 ArtecRobo.Accelerometer = acc_1.ArtecRoboAccelerometer;
@@ -801,6 +803,64 @@ class ArtecRoboTouchSensor extends inputParts_1.ArtecRoboInputParts {
     }
 }
 exports.ArtecRoboTouchSensor = ArtecRoboTouchSensor;
+
+
+/***/ }),
+
+/***/ "./src/atcrobo/parts/ultrasonic.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const inputParts_1 = __webpack_require__("./src/atcrobo/parts/inputParts.ts");
+class ArtecRoboUltrasonicSensor extends inputParts_1.ArtecRoboInputParts {
+    constructor(artecRobo, inPin) {
+        if (typeof inPin === "string") {
+            if (!(inPin === "P0" || inPin === "P1")) {
+                throw new Error(`This parts can connect only 'P0','P1'`);
+            }
+        }
+        super(artecRobo, inPin);
+        this._obnizLogicAnalyzer = artecRobo.studuinoBit.obniz.logicAnalyzer;
+        this._obnizIoObj = artecRobo.studuinoBit.obniz.getIO(this._inPin.terminalPin.pin);
+        this._obnizAdObj = artecRobo.studuinoBit.obniz.getAD(this._inPin.terminalPin.pin);
+    }
+    getDistance() {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("wip: UltrasonicSensor.getDistance");
+            this._obnizAdObj.start(function (voltage) {
+                console.log(voltage);
+            });
+            this._obnizLogicAnalyzer.start({ io: this._inPin.terminalPin.pin, interval: 1, duration: 1000 });
+            this._obnizIoObj.pull('pull-down');
+            yield new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 100);
+            });
+            this._obnizIoObj.pull('3v');
+            yield new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 100);
+            });
+            this._obnizIoObj.pull('pull-down');
+            this._obnizLogicAnalyzer.onmesured = function (arr) {
+                console.log(arr);
+            };
+        });
+    }
+}
+exports.ArtecRoboUltrasonicSensor = ArtecRoboUltrasonicSensor;
 
 
 /***/ }),
