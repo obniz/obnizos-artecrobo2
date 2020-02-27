@@ -27,7 +27,7 @@ export class ArtecRoboUltrasonicSensor extends ArtecRoboInputParts {
     console.log("wip: UltrasonicSensor.getDistance")
 
     this._obnizAdObj.start(function (voltage: number) {
-      console.log(voltage)
+      console.log("voltage:", voltage)
     })
 
     this._obnizLogicAnalyzer.start({ io: this._inPin.terminalPin.pin, interval: 1, duration: 1000 })
@@ -46,7 +46,8 @@ export class ArtecRoboUltrasonicSensor extends ArtecRoboInputParts {
     })
     this._obnizIoObj.pull('pull-down')
 
-    this._obnizLogicAnalyzer.onmesured = function(arr: any) {
+    this._obnizLogicAnalyzer.onmeasured = function(arr: any) {
+      console.log("logicAnalyzer onmeasured")
       console.log(arr)
     }
   }

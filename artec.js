@@ -977,7 +977,7 @@ class ArtecRoboUltrasonicSensor extends inputParts_1.ArtecRoboInputParts {
         return __awaiter(this, void 0, void 0, function* () {
             console.log("wip: UltrasonicSensor.getDistance");
             this._obnizAdObj.start(function (voltage) {
-                console.log(voltage);
+                console.log("voltage:", voltage);
             });
             this._obnizLogicAnalyzer.start({ io: this._inPin.terminalPin.pin, interval: 1, duration: 1000 });
             this._obnizIoObj.pull('pull-down');
@@ -993,7 +993,8 @@ class ArtecRoboUltrasonicSensor extends inputParts_1.ArtecRoboInputParts {
                 }, 100);
             });
             this._obnizIoObj.pull('pull-down');
-            this._obnizLogicAnalyzer.onmesured = function (arr) {
+            this._obnizLogicAnalyzer.onmeasured = function (arr) {
+                console.log("logicAnalyzer onmeasured");
                 console.log(arr);
             };
         });
