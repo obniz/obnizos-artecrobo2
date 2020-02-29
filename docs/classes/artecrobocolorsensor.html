@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>StuduinoBitButton | Artec.js</title>
+	<title>ArtecRoboColorSensor | Artec.js</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="studuinobitbutton.html">StuduinoBitButton</a>
+					<a href="artecrobocolorsensor.html">ArtecRoboColorSensor</a>
 				</li>
 			</ul>
-			<h1>Class StuduinoBitButton</h1>
+			<h1>Class ArtecRoboColorSensor</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">StuduinoBitButton</span>
+						<a href="artecroboi2cparts.html" class="tsd-signature-type">ArtecRoboI2CParts</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">ArtecRoboColorSensor</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -79,15 +84,15 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="studuinobitbutton.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="artecrobocolorsensor.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="studuinobitbutton.html#getpresses" class="tsd-kind-icon">get<wbr>Presses</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="studuinobitbutton.html#ispressedwait" class="tsd-kind-icon">is<wbr>Pressed<wbr>Wait</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="studuinobitbutton.html#waspressed" class="tsd-kind-icon">was<wbr>Pressed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="artecrobocolorsensor.html#__calcxycode" class="tsd-kind-icon">__calc<wbr>XyCode</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="artecrobocolorsensor.html#getcolorcode" class="tsd-kind-icon">get<wbr>Color<wbr>Code</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="artecrobocolorsensor.html#getvalues" class="tsd-kind-icon">get<wbr>Values</a></li>
 							</ul>
 						</section>
 					</div>
@@ -95,29 +100,27 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Studuino<wbr>Bit<wbr>Button<span class="tsd-signature-symbol">(</span>studuinoBit<span class="tsd-signature-symbol">: </span><a href="studuinobit.html" class="tsd-signature-type">StuduinoBit</a>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ButtonOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="studuinobitbutton.html" class="tsd-signature-type">StuduinoBitButton</a></li>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Artec<wbr>Robo<wbr>Color<wbr>Sensor<span class="tsd-signature-symbol">(</span>artecRobo<span class="tsd-signature-symbol">: </span><a href="artecrobo.html" class="tsd-signature-type">ArtecRobo</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="artecrobocolorsensor.html" class="tsd-signature-type">ArtecRoboColorSensor</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Overrides <a href="artecroboi2cparts.html">ArtecRoboI2CParts</a>.<a href="artecroboi2cparts.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9fe3ca3/src/stubit/sensor/button.ts#L9">stubit/sensor/button.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9fe3ca3/src/atcrobo/parts/color.ts#L67">atcrobo/parts/color.ts:67</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>studuinoBit: <a href="studuinobit.html" class="tsd-signature-type">StuduinoBit</a></h5>
-								</li>
-								<li>
-									<h5>options: <span class="tsd-signature-type">ButtonOptions</span></h5>
+									<h5>artecRobo: <a href="artecrobo.html" class="tsd-signature-type">ArtecRobo</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="studuinobitbutton.html" class="tsd-signature-type">StuduinoBitButton</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="artecrobocolorsensor.html" class="tsd-signature-type">ArtecRoboColorSensor</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -125,53 +128,53 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getpresses" class="tsd-anchor"></a>
-					<h3>get<wbr>Presses</h3>
+					<a name="__calcxycode" class="tsd-anchor"></a>
+					<h3>__calc<wbr>XyCode</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Presses<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">__calc<wbr>XyCode<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9fe3ca3/src/stubit/sensor/button.ts#L31">stubit/sensor/button.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9fe3ca3/src/atcrobo/parts/color.ts#L123">atcrobo/parts/color.ts:123</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="ispressedwait" class="tsd-anchor"></a>
-					<h3>is<wbr>Pressed<wbr>Wait</h3>
+					<a name="getcolorcode" class="tsd-anchor"></a>
+					<h3>get<wbr>Color<wbr>Code</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Pressed<wbr>Wait<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Color<wbr>Code<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9fe3ca3/src/stubit/sensor/button.ts#L21">stubit/sensor/button.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9fe3ca3/src/atcrobo/parts/color.ts#L91">atcrobo/parts/color.ts:91</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="waspressed" class="tsd-anchor"></a>
-					<h3>was<wbr>Pressed</h3>
+					<a name="getvalues" class="tsd-anchor"></a>
+					<h3>get<wbr>Values</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">was<wbr>Pressed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Values<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9fe3ca3/src/stubit/sensor/button.ts#L25">stubit/sensor/button.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/obniz/obnizos-artecrobo2/blob/9fe3ca3/src/atcrobo/parts/color.ts#L76">atcrobo/parts/color.ts:76</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -190,19 +193,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
-						<a href="studuinobitbutton.html" class="tsd-kind-icon">Studuino<wbr>Bit<wbr>Button</a>
+						<a href="artecrobocolorsensor.html" class="tsd-kind-icon">Artec<wbr>Robo<wbr>Color<wbr>Sensor</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="studuinobitbutton.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="artecrobocolorsensor.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="studuinobitbutton.html#getpresses" class="tsd-kind-icon">get<wbr>Presses</a>
+								<a href="artecrobocolorsensor.html#__calcxycode" class="tsd-kind-icon">__calc<wbr>XyCode</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="studuinobitbutton.html#ispressedwait" class="tsd-kind-icon">is<wbr>Pressed<wbr>Wait</a>
+								<a href="artecrobocolorsensor.html#getcolorcode" class="tsd-kind-icon">get<wbr>Color<wbr>Code</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="studuinobitbutton.html#waspressed" class="tsd-kind-icon">was<wbr>Pressed</a>
+								<a href="artecrobocolorsensor.html#getvalues" class="tsd-kind-icon">get<wbr>Values</a>
 							</li>
 						</ul>
 					</li>

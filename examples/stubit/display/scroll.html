@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
-  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="https://unpkg.com/obniz@3.0.0/obniz.js"></script>
   <script src="../../../artec.js"></script>
 </head>
 
@@ -17,9 +17,15 @@
     var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
     stubit.onconnect = async function () {
       stubit.display.on();
-      await stubit.display.scrollWait('A B C D ');
-      console.log('finished');
-      await stubit.display.scrollWait('1 2 3 ', 150, true, true, false, [20, 20, 20]);
+      // stubit.obniz.debugprint = true
+      await stubit.display.scrollWait("1 2 3 ");
+      console.log("1");
+      await stubit.buzzer.onWait("F4", 1000);
+      console.log("2")
+      await stubit.display.scrollWait("1 2 3 ", 150, false, false, true, [10, 10, 10]);
+      console.log("3");
+      await stubit.buzzer.onWait("F4", 1000);
+      console.log("4");
     }
 
   </script>

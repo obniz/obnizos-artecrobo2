@@ -112,6 +112,8 @@ const light_1 = __webpack_require__("./src/atcrobo/parts/light.ts");
 const sound_1 = __webpack_require__("./src/atcrobo/parts/sound.ts");
 const temperature_1 = __webpack_require__("./src/atcrobo/parts/temperature.ts");
 const touch_1 = __webpack_require__("./src/atcrobo/parts/touch.ts");
+const ultrasonic_1 = __webpack_require__("./src/atcrobo/parts/ultrasonic.ts");
+const color_1 = __webpack_require__("./src/atcrobo/parts/color.ts");
 const i2cPin_1 = __webpack_require__("./src/atcrobo/pin/i2cPin.ts");
 const inPin_1 = __webpack_require__("./src/atcrobo/pin/inPin.ts");
 const motorPin_1 = __webpack_require__("./src/atcrobo/pin/motorPin.ts");
@@ -194,6 +196,8 @@ class ArtecRobo {
 }
 ArtecRobo.Led = led_1.ArtecRoboLed;
 ArtecRobo.TouchSensor = touch_1.ArtecRoboTouchSensor;
+ArtecRobo.UltrasonicSensor = ultrasonic_1.ArtecRoboUltrasonicSensor;
+ArtecRobo.ColorSensor = color_1.ArtecRoboColorSensor;
 ArtecRobo.Motor = motor_1.ArtecRoboMotor;
 ArtecRobo.Buzzer = bzr_1.ArtecRoboBuzzer;
 ArtecRobo.Accelerometer = acc_1.ArtecRoboAccelerometer;
@@ -390,6 +394,143 @@ class ArtecRoboBuzzer extends bzr_1.StuduinoBitBuzzer {
     }
 }
 exports.ArtecRoboBuzzer = ArtecRoboBuzzer;
+
+
+/***/ }),
+
+/***/ "./src/atcrobo/parts/color.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const i2cParts_1 = __webpack_require__("./src/atcrobo/parts/i2cParts.ts");
+class ArtecRoboColorSensor extends i2cParts_1.ArtecRoboI2CParts {
+    constructor(artecRobo) {
+        super(artecRobo);
+        this.ColorSensorConfig = {
+            I2C_ADDR: 0x36,
+            GET_COLOR_RGB: 0x63,
+            LED_ENABLE_R: 0x52,
+            LED_ENABLE_G: 0x47,
+            LED_ENABLE_B: 0x42,
+            LED_DISABLE: 0x44,
+            // Color code
+            COLOR_UNDEF: 0,
+            COLOR_RED: 1,
+            COLOR_GREEN: 2,
+            COLOR_BLUE: 3,
+            COLOR_WHITE: 4,
+            COLOR_YELLOW: 5,
+            COLOR_ORANGE: 6,
+            COLOR_PURPLE: 7,
+            // for Artec Block
+            LOST_THRESHOLD: 25,
+            MIN_X_RED: 0.37,
+            MAX_X_RED: 0.48,
+            MIN_Y_RED: 0.28,
+            MAX_Y_RED: 0.36,
+            MIN_X_GREEN: 0.23,
+            MAX_X_GREEN: 0.33,
+            MIN_Y_GREEN: 0.35,
+            MAX_Y_GREEN: 0.46,
+            MIN_X_BLUE: 0.20,
+            MAX_X_BLUE: 0.31,
+            MIN_Y_BLUE: 0.20,
+            MAX_Y_BLUE: 0.28,
+            MIN_X_WHITE: 0.30,
+            MAX_X_WHITE: 0.37,
+            MIN_Y_WHITE: 0.30,
+            MAX_Y_WHITE: 0.35,
+            MIN_X_YELLOW: 0.34,
+            MAX_X_YELLOW: 0.47,
+            MIN_Y_YELLOW: 0.36,
+            MAX_Y_YELLOW: 0.45,
+            MIN_X_ORANGE: 0.44,
+            MAX_X_ORANGE: 0.55,
+            MIN_Y_ORANGE: 0.33,
+            MAX_Y_ORANGE: 0.38,
+            MIN_X_PURPLE: 0.22,
+            MAX_X_PURPLE: 0.31,
+            MIN_Y_PURPLE: 0.28,
+            MAX_Y_PURPLE: 0.32,
+        };
+        this.red = 0;
+        this.green = 0;
+        this.blue = 0;
+        this.luminance = 0;
+        this.x = 0;
+        this.y = 0;
+        this.__addr = this.ColorSensorConfig.I2C_ADDR;
+        this.i2c0 = artecRobo.studuinoBit.obniz.i2c0;
+        this.i2c0.start({ mode: "master", sda: 21, scl: 22, clock: 400000 });
+    }
+    getValues() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.i2c0.write(this.__addr, [this.ColorSensorConfig.GET_COLOR_RGB]);
+            let readingdata = yield this.i2c0.readWait(this.__addr, 4);
+            if (readingdata.length) {
+                this.red = readingdata[0];
+                this.green = readingdata[1];
+                this.blue = readingdata[2];
+                this.luminance = readingdata[3];
+                return readingdata;
+            }
+            else {
+                throw new Error("ColorSensorConfig can't get valid values");
+            }
+        });
+    }
+    getColorCode() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.getValues();
+            yield this.__calcXyCode();
+            if (this.red <= this.ColorSensorConfig.LOST_THRESHOLD && this.green <= this.ColorSensorConfig.LOST_THRESHOLD && this.blue <= this.ColorSensorConfig.LOST_THRESHOLD) {
+                return this.ColorSensorConfig.COLOR_UNDEF;
+            }
+            if (this.x >= this.ColorSensorConfig.MIN_X_RED && this.x <= this.ColorSensorConfig.MAX_X_RED && this.y >= this.ColorSensorConfig.MIN_Y_RED && this.y <= this.ColorSensorConfig.MAX_Y_RED) {
+                return this.ColorSensorConfig.COLOR_RED;
+            }
+            if (this.x >= this.ColorSensorConfig.MIN_X_GREEN && this.x <= this.ColorSensorConfig.MAX_X_GREEN && this.y >= this.ColorSensorConfig.MIN_Y_GREEN && this.y <= this.ColorSensorConfig.MAX_Y_GREEN) {
+                return this.ColorSensorConfig.COLOR_GREEN;
+            }
+            if (this.x >= this.ColorSensorConfig.MIN_X_BLUE && this.x <= this.ColorSensorConfig.MAX_X_BLUE && this.y >= this.ColorSensorConfig.MIN_Y_BLUE && this.y <= this.ColorSensorConfig.MAX_Y_BLUE) {
+                return this.ColorSensorConfig.COLOR_BLUE;
+            }
+            if (this.x >= this.ColorSensorConfig.MIN_X_WHITE && this.x <= this.ColorSensorConfig.MAX_X_WHITE && this.y >= this.ColorSensorConfig.MIN_Y_WHITE && this.y <= this.ColorSensorConfig.MAX_Y_WHITE) {
+                return this.ColorSensorConfig.COLOR_WHITE;
+            }
+            if (this.x >= this.ColorSensorConfig.MIN_X_YELLOW && this.x <= this.ColorSensorConfig.MAX_X_YELLOW && this.y >= this.ColorSensorConfig.MIN_Y_YELLOW && this.y <= this.ColorSensorConfig.MAX_Y_YELLOW) {
+                return this.ColorSensorConfig.COLOR_YELLOW;
+            }
+            if (this.x >= this.ColorSensorConfig.MIN_X_ORANGE && this.x <= this.ColorSensorConfig.MAX_X_ORANGE && this.y >= this.ColorSensorConfig.MIN_Y_ORANGE && this.y <= this.ColorSensorConfig.MAX_Y_ORANGE) {
+                return this.ColorSensorConfig.COLOR_ORANGE;
+            }
+            if (this.x >= this.ColorSensorConfig.MIN_X_PURPLE && this.x <= this.ColorSensorConfig.MAX_X_PURPLE && this.y >= this.ColorSensorConfig.MIN_Y_PURPLE && this.y <= this.ColorSensorConfig.MAX_Y_PURPLE) {
+                return this.ColorSensorConfig.COLOR_PURPLE;
+            }
+            return this.ColorSensorConfig.COLOR_UNDEF;
+        });
+    }
+    __calcXyCode() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const X = (0.576669) * this.red + (0.185558) * this.green + (0.188229) * this.blue;
+            const Y = (0.297345) * this.red + (0.627364) * this.green + (0.075291) * this.blue;
+            const Z = (0.027031) * this.red + (0.070689) * this.green + (0.991338) * this.blue;
+            this.x = X / (X + Y + Z);
+            this.y = Y / (X + Y + Z);
+        });
+    }
+}
+exports.ArtecRoboColorSensor = ArtecRoboColorSensor;
 
 
 /***/ }),
@@ -801,6 +942,65 @@ class ArtecRoboTouchSensor extends inputParts_1.ArtecRoboInputParts {
     }
 }
 exports.ArtecRoboTouchSensor = ArtecRoboTouchSensor;
+
+
+/***/ }),
+
+/***/ "./src/atcrobo/parts/ultrasonic.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const inputParts_1 = __webpack_require__("./src/atcrobo/parts/inputParts.ts");
+class ArtecRoboUltrasonicSensor extends inputParts_1.ArtecRoboInputParts {
+    constructor(artecRobo, inPin) {
+        if (typeof inPin === "string") {
+            if (!(inPin === "P0" || inPin === "P1")) {
+                throw new Error(`This parts can connect only 'P0','P1'`);
+            }
+        }
+        super(artecRobo, inPin);
+        this._obnizLogicAnalyzer = artecRobo.studuinoBit.obniz.logicAnalyzer;
+        this._obnizIoObj = artecRobo.studuinoBit.obniz.getIO(this._inPin.terminalPin.pin);
+        this._obnizAdObj = artecRobo.studuinoBit.obniz.getAD(this._inPin.terminalPin.pin);
+    }
+    getDistance() {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("wip: UltrasonicSensor.getDistance");
+            this._obnizAdObj.start(function (voltage) {
+                console.log("voltage:", voltage);
+            });
+            this._obnizLogicAnalyzer.start({ io: this._inPin.terminalPin.pin, interval: 1, duration: 1000 });
+            this._obnizIoObj.pull('pull-down');
+            yield new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 100);
+            });
+            this._obnizIoObj.pull('3v');
+            yield new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 100);
+            });
+            this._obnizIoObj.pull('pull-down');
+            this._obnizLogicAnalyzer.onmeasured = function (arr) {
+                console.log("logicAnalyzer onmeasured");
+                console.log(arr);
+            };
+        });
+    }
+}
+exports.ArtecRoboUltrasonicSensor = ArtecRoboUltrasonicSensor;
 
 
 /***/ }),

@@ -9,6 +9,8 @@ import {ArtecRoboLightSensor} from "./parts/light";
 import {ArtecRoboSoundSensor} from "./parts/sound";
 import {ArtecRoboTemperature} from "./parts/temperature";
 import {ArtecRoboTouchSensor} from "./parts/touch";
+import {ArtecRoboUltrasonicSensor} from "./parts/ultrasonic";
+import {ArtecRoboColorSensor} from "./parts/color";
 import {I2CPin} from "./pin/i2cPin";
 import {InPin} from "./pin/inPin";
 import {MotorPin} from "./pin/motorPin";
@@ -24,6 +26,8 @@ export type ArtecRoboPort = ArtecRoboI2CPort | ArtecRoboMotorPort | ArtecRoboInp
 export class ArtecRobo {
     public static Led = ArtecRoboLed;
     public static TouchSensor = ArtecRoboTouchSensor;
+    public static UltrasonicSensor = ArtecRoboUltrasonicSensor;
+    public static ColorSensor = ArtecRoboColorSensor;
     public static Motor = ArtecRoboMotor;
     public static Buzzer = ArtecRoboBuzzer;
     public static Accelerometer = ArtecRoboAccelerometer;
