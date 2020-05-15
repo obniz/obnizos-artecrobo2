@@ -5,7 +5,7 @@ import {I2CPin} from "../pin/i2cPin";
 import {MotorPin} from "../pin/motorPin";
 import {ArtecRoboMotorParts, MotorPinString} from "./motorParts";
 
-type  ArtecRoboMotorMotion = "cw" | "ccw" | "break" | "stop";
+type  ArtecRoboMotorMotion = "cw" | "ccw" | "brake" | "stop";
 
 export class ArtecRoboMotor extends ArtecRoboMotorParts {
     private _currentMotion: ArtecRoboMotorMotion = "stop";
@@ -19,7 +19,7 @@ export class ArtecRoboMotor extends ArtecRoboMotorParts {
 
     public CW = "cw";
     public CCW = "ccw";
-    public BREAK = "break";
+    public BRAKE = "brake";
     public STOP = "stop";
 
     constructor(artecRobo: ArtecRobo, motorPin: MotorPin | MotorPinString) {
@@ -45,8 +45,8 @@ export class ArtecRoboMotor extends ArtecRoboMotorParts {
         this._action("stop");
     }
 
-    public break() {
-        this._action("break");
+    public brake() {
+        this._action("brake");
     }
 
     public power(power: number) {
@@ -66,16 +66,16 @@ export class ArtecRoboMotor extends ArtecRoboMotorParts {
             index = 1;
         } else if (motion === "stop") {
             index = 2;
-        } else if (motion === "break") {
+        } else if (motion === "brake") {
             index = 3;
         } else {
-            throw new Error("motion: DCMotor.CW/CCW/STOP/BREAK");
+            throw new Error("motion: DCMotor.CW/CCW/STOP/BRAKE");
         }
         const command = [this._COMMAND[this._p][index]];
         if (this._currentMotion === "cw" && motion === "ccw"
             || this._currentMotion === "ccw" && motion === "cw") {
 
-            // break
+            // brake
             this._motorPin.i2c.write(this._ADDRESS, [this._COMMAND[this._p][3]]);
             // @ts-ignore
             this._motorPin.i2c.obnizI2c.Obniz.wait(100);
