@@ -73,7 +73,7 @@ export class ArtecRoboColorSensor extends ArtecRoboI2CParts  {
     this.i2c0.start({mode: "master", sda: 21, scl: 22, clock: 400000});
   }
 
-  public async getValues() {
+  public async getValuesWait() {
     this.i2c0.write(this.__addr, [this.ColorSensorConfig.GET_COLOR_RGB]);
     let readingdata = await this.i2c0.readWait(this.__addr, 4);
 
@@ -88,8 +88,8 @@ export class ArtecRoboColorSensor extends ArtecRoboI2CParts  {
     }
   }
 
-  public async getColorCode() {
-    await this.getValues();
+  public async getColorCodeWait() {
+    await this.getValuesWait();
     await this.__calcXyCode();
 
     if (this.red <= this.ColorSensorConfig.LOST_THRESHOLD && this.green <= this.ColorSensorConfig.LOST_THRESHOLD && this.blue <= this.ColorSensorConfig.LOST_THRESHOLD) {

@@ -473,7 +473,7 @@ class ArtecRoboColorSensor extends i2cParts_1.ArtecRoboI2CParts {
         this.i2c0 = artecRobo.studuinoBit.obniz.i2c0;
         this.i2c0.start({ mode: "master", sda: 21, scl: 22, clock: 400000 });
     }
-    getValues() {
+    getValuesWait() {
         return __awaiter(this, void 0, void 0, function* () {
             this.i2c0.write(this.__addr, [this.ColorSensorConfig.GET_COLOR_RGB]);
             let readingdata = yield this.i2c0.readWait(this.__addr, 4);
@@ -489,9 +489,9 @@ class ArtecRoboColorSensor extends i2cParts_1.ArtecRoboI2CParts {
             }
         });
     }
-    getColorCode() {
+    getColorCodeWait() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.getValues();
+            yield this.getValuesWait();
             yield this.__calcXyCode();
             if (this.red <= this.ColorSensorConfig.LOST_THRESHOLD && this.green <= this.ColorSensorConfig.LOST_THRESHOLD && this.blue <= this.ColorSensorConfig.LOST_THRESHOLD) {
                 return this.ColorSensorConfig.COLOR_UNDEF;
