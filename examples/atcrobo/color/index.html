@@ -25,14 +25,14 @@ Color Sensor:<span id="sensor"></span><br/>
     ledBlink();
 
     async function testGetValues() {
-      const color = await sensor.getValues()
+      const color = await sensor.getValuesWait()
       const bg = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")"
       console.log(bg)
       $("html").css('background-color', bg)
     }
 
     async function testGetColorCode() {
-      const colorCode = await sensor.getColorCode()
+      const colorCode = await sensor.getColorCodeWait()
       const colorArr = ["undef", "red", "green", "blue", "white", "yellow", "orange", "purple"]
       console.log(colorCode)
       $("#sensor").text(colorArr[colorCode]);}

@@ -473,7 +473,7 @@ class ArtecRoboColorSensor extends i2cParts_1.ArtecRoboI2CParts {
         this.i2c0 = artecRobo.studuinoBit.obniz.i2c0;
         this.i2c0.start({ mode: "master", sda: 21, scl: 22, clock: 400000 });
     }
-    getValues() {
+    getValuesWait() {
         return __awaiter(this, void 0, void 0, function* () {
             this.i2c0.write(this.__addr, [this.ColorSensorConfig.GET_COLOR_RGB]);
             let readingdata = yield this.i2c0.readWait(this.__addr, 4);
@@ -489,9 +489,9 @@ class ArtecRoboColorSensor extends i2cParts_1.ArtecRoboI2CParts {
             }
         });
     }
-    getColorCode() {
+    getColorCodeWait() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.getValues();
+            yield this.getValuesWait();
             yield this.__calcXyCode();
             if (this.red <= this.ColorSensorConfig.LOST_THRESHOLD && this.green <= this.ColorSensorConfig.LOST_THRESHOLD && this.blue <= this.ColorSensorConfig.LOST_THRESHOLD) {
                 return this.ColorSensorConfig.COLOR_UNDEF;
@@ -676,7 +676,7 @@ class ArtecRoboMotor extends motorParts_1.ArtecRoboMotorParts {
         ];
         this.CW = "cw";
         this.CCW = "ccw";
-        this.BREAK = "break";
+        this.BRAKE = "brake";
         this.STOP = "stop";
         if (this._motorPin === artecRobo.m1) {
             this._p = 0;
@@ -694,8 +694,8 @@ class ArtecRoboMotor extends motorParts_1.ArtecRoboMotorParts {
     stop() {
         this._action("stop");
     }
-    break() {
-        this._action("break");
+    brake() {
+        this._action("brake");
     }
     power(power) {
         if (power > 255 || power < 0 || !Number.isInteger(power)) {
@@ -716,16 +716,16 @@ class ArtecRoboMotor extends motorParts_1.ArtecRoboMotorParts {
         else if (motion === "stop") {
             index = 2;
         }
-        else if (motion === "break") {
+        else if (motion === "brake") {
             index = 3;
         }
         else {
-            throw new Error("motion: DCMotor.CW/CCW/STOP/BREAK");
+            throw new Error("motion: DCMotor.CW/CCW/STOP/BRAKE");
         }
         const command = [this._COMMAND[this._p][index]];
         if (this._currentMotion === "cw" && motion === "ccw"
             || this._currentMotion === "ccw" && motion === "cw") {
-            // break
+            // brake
             this._motorPin.i2c.write(this._ADDRESS, [this._COMMAND[this._p][3]]);
             // @ts-ignore
             this._motorPin.i2c.obnizI2c.Obniz.wait(100);
