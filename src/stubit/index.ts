@@ -6,7 +6,6 @@ import {StuduinoBitSPI} from "./bus/spi";
 import { StuduinoBitImage } from "./image/image";
 import {StuduinoBitBuzzer} from "./output/bzr";
 import {StuduinoBitDisplay} from "./output/dsply";
-import {StuduinoBitLed} from "./output/led";
 import {StuduinoBitAccelerometer} from "./sensor/accelerometer";
 import {StuduinoBitButton} from "./sensor/button";
 import { StuduinoBitGyro } from "./sensor/gyro";
@@ -34,7 +33,6 @@ export class StuduinoBit {
     public static Image = StuduinoBitImage;
 
     /* parts */
-    public led?: StuduinoBitLed;
     public button_a?: StuduinoBitButton;
     public button_b?: StuduinoBitButton;
     public display?: StuduinoBitDisplay;
@@ -106,7 +104,6 @@ export class StuduinoBit {
         this.accelerometer = new StuduinoBitAccelerometer(this.icm20948);
         this.gyro = new StuduinoBitGyro(this.icm20948);
         this.compass = new StuduinoBitCompass(this, this.icm20948);
-        this.led = new StuduinoBitLed(this, {anode: 14});
         this.button_a = new StuduinoBitButton(this, {signal: 15});
         this.button_b = new StuduinoBitButton(this, {signal: 27});
         this.display = new StuduinoBitDisplay(this, {din: 4});
@@ -136,7 +133,6 @@ export class StuduinoBit {
     }
 
     private _unWire() {
-        this.led = undefined;
         this.display = undefined;
         this.button_a = undefined;
         this.button_b = undefined;

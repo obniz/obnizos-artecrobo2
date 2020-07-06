@@ -1,6 +1,4 @@
 // tslint:disable:max-classes-per-file
-
-import { AD } from "obniz/obniz/libs/io_peripherals/ad";
 import { PWM } from "obniz/obniz/libs/io_peripherals/pwm";
 import {StuduinoBit} from "./index";
 

@@ -1,6 +1,5 @@
 import {LED, LEDOptions} from "obniz/parts/Light/LED";
 import {StuduinoBit} from "../../stubit";
-import {StuduinoBitLed} from "../../stubit/output/led";
 import {ArtecRobo, ArtecRoboPort} from "../index";
 import {OutPin} from "../pin/outPin";
 import {ArtecRoboOutputParts, OutPinString} from "./outputParts";
