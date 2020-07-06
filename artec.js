@@ -1706,7 +1706,6 @@ const i2c_1 = __webpack_require__("./src/stubit/bus/i2c.ts");
 const image_1 = __webpack_require__("./src/stubit/image/image.ts");
 const bzr_1 = __webpack_require__("./src/stubit/output/bzr.ts");
 const dsply_1 = __webpack_require__("./src/stubit/output/dsply.ts");
-const led_1 = __webpack_require__("./src/stubit/output/led.ts");
 const accelerometer_1 = __webpack_require__("./src/stubit/sensor/accelerometer.ts");
 const button_1 = __webpack_require__("./src/stubit/sensor/button.ts");
 const gyro_1 = __webpack_require__("./src/stubit/sensor/gyro.ts");
@@ -1749,7 +1748,6 @@ class StuduinoBit {
             this.accelerometer = new accelerometer_1.StuduinoBitAccelerometer(this.icm20948);
             this.gyro = new gyro_1.StuduinoBitGyro(this.icm20948);
             this.compass = new compass_1.StuduinoBitCompass(this, this.icm20948);
-            this.led = new led_1.StuduinoBitLed(this, { anode: 14 });
             this.button_a = new button_1.StuduinoBitButton(this, { signal: 15 });
             this.button_b = new button_1.StuduinoBitButton(this, { signal: 27 });
             this.display = new dsply_1.StuduinoBitDisplay(this, { din: 4 });
@@ -1778,7 +1776,6 @@ class StuduinoBit {
         });
     }
     _unWire() {
-        this.led = undefined;
         this.display = undefined;
         this.button_a = undefined;
         this.button_b = undefined;
@@ -2182,28 +2179,6 @@ class StuduinoBitDisplay {
     }
 }
 exports.StuduinoBitDisplay = StuduinoBitDisplay;
-
-
-/***/ }),
-
-/***/ "./src/stubit/output/led.ts":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class StuduinoBitLed {
-    constructor(studuinoBit, options) {
-        this._obnizLED = studuinoBit.obniz.wired("LED", options);
-    }
-    on() {
-        this._obnizLED.on();
-    }
-    off() {
-        this._obnizLED.off();
-    }
-}
-exports.StuduinoBitLed = StuduinoBitLed;
 
 
 /***/ }),
@@ -3009,7 +2984,6 @@ exports.StuduinoBitTemperature = StuduinoBitTemperature;
 
 "use strict";
 
-// tslint:disable:max-classes-per-file
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }

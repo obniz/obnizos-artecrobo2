@@ -1,7 +1,4 @@
-import {DCMotor} from "obniz/parts/Moving/DCMotor";
-import {StuduinoBitLed} from "../../stubit/output/led";
 import {ArtecRobo, ArtecRoboPort} from "../index";
-import {I2CPin} from "../pin/i2cPin";
 import {MotorPin} from "../pin/motorPin";
 import {ArtecRoboMotorParts, MotorPinString} from "./motorParts";
 
